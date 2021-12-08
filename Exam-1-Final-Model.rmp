@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="9.6.000">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="9.6.000" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2020"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="9.6.000" expanded="true" height="68" name="Retrieve Exam-1-Model-Comparison-02-Model-LR" width="90" x="112" y="238">
+        <parameter key="repository_entry" value="Exam-1-Model-Comparison-02-Model-LR"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="9.6.000" expanded="true" height="82" name="Apply Model" width="90" x="112" y="391">
+        <list key="application_parameters"/>
+        <parameter key="create_view" value="false"/>
+      </operator>
+      <operator activated="true" class="retrieve" compatibility="9.6.000" expanded="true" height="68" name="Retrieve Exam-1-Model-Comparison-02-Threshold-LR" width="90" x="313" y="238">
+        <parameter key="repository_entry" value="Exam-1-Model-Comparison-02-Threshold-LR"/>
+      </operator>
+      <operator activated="true" class="apply_threshold" compatibility="9.6.000" expanded="true" height="82" name="Apply Threshold" width="90" x="313" y="391"/>
+      <connect from_port="input 1" to_op="Apply Model" to_port="unlabelled data"/>
+      <connect from_op="Retrieve Exam-1-Model-Comparison-02-Model-LR" from_port="output" to_op="Apply Model" to_port="model"/>
+      <connect from_op="Apply Model" from_port="labelled data" to_op="Apply Threshold" to_port="example set"/>
+      <connect from_op="Retrieve Exam-1-Model-Comparison-02-Threshold-LR" from_port="output" to_op="Apply Threshold" to_port="threshold"/>
+      <connect from_op="Apply Threshold" from_port="example set" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="source_input 2" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <description align="left" color="yellow" colored="true" height="159" resized="true" width="462" x="72" y="27">APPLY FINAL MODEL&lt;br&gt;Credit card fraud prediction based on anonymized transaction data.&lt;br&gt;&lt;br&gt;This process applies the final model with threshold.&lt;br&gt;&lt;br&gt;[1] apply previously stored &amp;quot;Exam-1-Model-Comparison-02-Model-LR&amp;quot;&lt;br&gt;[2] apply previously stored &amp;quot;Exam-1-Model-Comparison-02-Threshold-LR&amp;quot;&lt;br&gt;&lt;br&gt;</description>
+      <description align="left" color="green" colored="true" height="301" resized="true" width="190" x="72" y="188">Apply Model</description>
+      <description align="left" color="yellow" colored="true" height="69" resized="true" width="463" x="71" y="490">Outputs:&lt;br&gt;- ExampleSet with final model &amp;amp; threshold applied, can be used to measure performance at later step</description>
+      <description align="left" color="purple" colored="true" height="301" resized="true" width="270" x="264" y="188">Apply Threshold</description>
+    </process>
+  </operator>
+</process>

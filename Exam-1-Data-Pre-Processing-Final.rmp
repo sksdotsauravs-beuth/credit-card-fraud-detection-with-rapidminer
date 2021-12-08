@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="9.6.000">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="9.6.000" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2020"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="productivity:execute_process" compatibility="9.6.000" expanded="true" height="68" name="Execute Exam-1-Basic-Preparation" width="90" x="112" y="391">
+        <parameter key="process_location" value="Exam-1-Basic-Preparation"/>
+        <parameter key="use_input" value="true"/>
+        <parameter key="store_output" value="false"/>
+        <parameter key="propagate_metadata_recursively" value="true"/>
+        <parameter key="cache_process" value="true"/>
+        <list key="macros"/>
+        <parameter key="fail_for_unknown_macros" value="true"/>
+      </operator>
+      <operator activated="true" class="subprocess" compatibility="9.6.000" expanded="true" height="82" name="Pre-Process" width="90" x="313" y="391">
+        <process expanded="true">
+          <operator activated="true" class="retrieve" compatibility="9.6.000" expanded="true" height="68" name="Retrieve Exam-1-Data-Pre-Processing-Model" width="90" x="112" y="187">
+            <parameter key="repository_entry" value="Exam-1-Data-Pre-Processing-Model"/>
+          </operator>
+          <operator activated="true" class="apply_model" compatibility="9.6.000" expanded="true" height="82" name="Apply Pre-Processing Model" width="90" x="246" y="34">
+            <list key="application_parameters"/>
+            <parameter key="create_view" value="false"/>
+          </operator>
+          <connect from_port="in 1" to_op="Apply Pre-Processing Model" to_port="unlabelled data"/>
+          <connect from_op="Retrieve Exam-1-Data-Pre-Processing-Model" from_port="output" to_op="Apply Pre-Processing Model" to_port="model"/>
+          <connect from_op="Apply Pre-Processing Model" from_port="labelled data" to_port="out 1"/>
+          <portSpacing port="source_in 1" spacing="0"/>
+          <portSpacing port="source_in 2" spacing="0"/>
+          <portSpacing port="sink_out 1" spacing="0"/>
+          <portSpacing port="sink_out 2" spacing="0"/>
+        </process>
+      </operator>
+      <connect from_port="input 1" to_op="Execute Exam-1-Basic-Preparation" to_port="input 1"/>
+      <connect from_op="Execute Exam-1-Basic-Preparation" from_port="result 1" to_op="Pre-Process" to_port="in 1"/>
+      <connect from_op="Pre-Process" from_port="out 1" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="source_input 2" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <description align="left" color="yellow" colored="true" height="192" resized="true" width="443" x="72" y="27">DATA PRE-PROCESSING (FINAL)&lt;br&gt;Credit card fraud prediction based on anonymized transaction data.&lt;br&gt;&lt;br&gt;This process finally preprocess the data for modeling -&lt;br&gt;&lt;br&gt;[1] apply &amp;quot;Exam-1-Basic-Preparation&amp;quot;&lt;br&gt;[2] apply previously stored &amp;quot;Exam-1-Data-Pre-Processing-Model&amp;quot; to the input data&lt;br&gt;&lt;br&gt;[...] Reference: &amp;quot;Exam-1-Data-Pre-Processing-Initial&amp;quot;</description>
+      <description align="left" color="green" colored="true" height="279" resized="true" width="167" x="73" y="221">Basic Preparation&lt;br&gt;&lt;br&gt;Steps:&lt;br&gt;&lt;br&gt;- Set Role&lt;br&gt;- Numerical to Binomial&lt;br&gt;- Map&lt;br&gt;&lt;br&gt;</description>
+      <description align="left" color="yellow" colored="true" height="52" resized="true" width="439" x="72" y="501">Outputs:&lt;br&gt;- pre-processed data</description>
+      <description align="left" color="purple" colored="true" height="279" resized="true" width="270" x="241" y="221">Pre-Process&lt;br&gt;&lt;br&gt;Steps:&lt;br&gt;&lt;br&gt;- Normalize&lt;br&gt;- PCA</description>
+    </process>
+  </operator>
+</process>

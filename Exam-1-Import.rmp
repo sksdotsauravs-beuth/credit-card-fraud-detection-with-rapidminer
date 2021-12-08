@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="9.6.000">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="9.6.000" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2020"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="9.6.000" expanded="true" height="68" name="Retrieve Exam-1-Data" width="90" x="112" y="340">
+        <parameter key="repository_entry" value="Exam-1-Data"/>
+      </operator>
+      <operator activated="true" class="split_data" compatibility="9.6.000" expanded="true" height="103" name="Test-Train Split" width="90" x="313" y="340">
+        <enumeration key="partitions">
+          <parameter key="ratio" value="0.7"/>
+          <parameter key="ratio" value="0.3"/>
+        </enumeration>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="2020"/>
+      </operator>
+      <connect from_op="Retrieve Exam-1-Data" from_port="output" to_op="Test-Train Split" to_port="example set"/>
+      <connect from_op="Test-Train Split" from_port="partition 1" to_port="result 1"/>
+      <connect from_op="Test-Train Split" from_port="partition 2" to_port="result 2"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+      <description align="left" color="yellow" colored="true" height="159" resized="true" width="455" x="22" y="27">TEST TRAIN SPLIT (UNPROCESSED DATA)&lt;br&gt;Credit card fraud prediction based on anonymized transaction data.&lt;br&gt;&lt;br&gt;This process will simply split the unprocessed data (Total examples: 227846) into two groups -&lt;br/&gt;&lt;br&gt;- Train Split (to be used to train the model)&lt;br&gt;- Test Split (to be used to test the performance of the model)</description>
+      <description align="left" color="purple" colored="true" height="299" resized="true" width="253" x="22" y="188">Retrieve Exam-1 data from local repository.&lt;br&gt;</description>
+      <description align="left" color="blue" colored="true" height="299" resized="true" width="201" x="276" y="188">Using Split operator -&lt;br/&gt;&lt;br&gt;- partitions [ 0.7 + 0.3 ]&lt;br&gt;- sampling type [stratified]&lt;br&gt;- local random seed [2020]&lt;br&gt;</description>
+      <description align="left" color="yellow" colored="true" height="68" resized="true" width="455" x="22" y="489">Outputs:&lt;br&gt;- first split with 159492 (70%) examples for Training&lt;br&gt;- second split with 68353 (30%) examples for Testing</description>
+    </process>
+  </operator>
+</process>

@@ -1,0 +1,1900 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="9.6.000">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="9.6.000" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2020"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="productivity:execute_process" compatibility="9.6.000" expanded="true" height="82" name="Execute Exam-1-Import" width="90" x="45" y="391">
+        <parameter key="process_location" value="Exam-1-Import"/>
+        <parameter key="use_input" value="true"/>
+        <parameter key="store_output" value="false"/>
+        <parameter key="propagate_metadata_recursively" value="true"/>
+        <parameter key="cache_process" value="true"/>
+        <list key="macros"/>
+        <parameter key="fail_for_unknown_macros" value="true"/>
+      </operator>
+      <operator activated="true" class="productivity:execute_process" compatibility="9.6.000" expanded="true" height="68" name="Execute Exam-1-Data-Pre-Processing-Final: Training" width="90" x="246" y="391">
+        <parameter key="process_location" value="Exam-1-Data-Pre-Processing-Final"/>
+        <parameter key="use_input" value="true"/>
+        <parameter key="store_output" value="false"/>
+        <parameter key="propagate_metadata_recursively" value="true"/>
+        <parameter key="cache_process" value="true"/>
+        <list key="macros"/>
+        <parameter key="fail_for_unknown_macros" value="true"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="9.6.000" expanded="true" height="187" name="Multiply: Training" width="90" x="447" y="391"/>
+      <operator activated="true" class="productivity:execute_process" compatibility="9.6.000" expanded="true" height="68" name="Execute Exam-1-Data-Pre-Processing-Final: Testing" width="90" x="246" y="646">
+        <parameter key="process_location" value="Exam-1-Data-Pre-Processing-Final"/>
+        <parameter key="use_input" value="true"/>
+        <parameter key="store_output" value="false"/>
+        <parameter key="propagate_metadata_recursively" value="true"/>
+        <parameter key="cache_process" value="true"/>
+        <list key="macros"/>
+        <parameter key="fail_for_unknown_macros" value="true"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="9.6.000" expanded="true" height="187" name="Multiply: Testing" width="90" x="447" y="646"/>
+      <operator activated="true" class="subprocess" compatibility="9.6.000" expanded="true" height="145" name="with SVM" width="90" x="715" y="1615">
+        <process expanded="true">
+          <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="9.6.000" expanded="true" height="145" name="Optimize Parameters: SVM" width="90" x="313" y="34">
+            <list key="parameters">
+              <parameter key="SVM.kernel_type" value="polynomial"/>
+              <parameter key="SVM.kernel_degree" value="[1.0;4;3;linear]"/>
+            </list>
+            <parameter key="error_handling" value="fail on error"/>
+            <parameter key="log_performance" value="true"/>
+            <parameter key="log_all_criteria" value="true"/>
+            <parameter key="synchronize" value="false"/>
+            <parameter key="enable_parallel_execution" value="true"/>
+            <process expanded="true">
+              <operator activated="true" class="concurrency:cross_validation" compatibility="9.6.000" expanded="true" height="145" name="Cross Validation: SVM" width="90" x="45" y="136">
+                <parameter key="split_on_batch_attribute" value="false"/>
+                <parameter key="leave_one_out" value="false"/>
+                <parameter key="number_of_folds" value="10"/>
+                <parameter key="sampling_type" value="stratified sampling"/>
+                <parameter key="use_local_random_seed" value="true"/>
+                <parameter key="local_random_seed" value="2020"/>
+                <parameter key="enable_parallel_execution" value="true"/>
+                <process expanded="true">
+                  <operator activated="true" class="sample" compatibility="9.6.000" expanded="true" height="82" name="Sample: SVM" origin="GENERATED_TEMPLATE" width="90" x="45" y="34">
+                    <parameter key="sample" value="relative"/>
+                    <parameter key="balance_data" value="true"/>
+                    <parameter key="sample_size" value="100"/>
+                    <parameter key="sample_ratio" value="0.1"/>
+                    <parameter key="sample_probability" value="0.1"/>
+                    <list key="sample_size_per_class"/>
+                    <list key="sample_ratio_per_class">
+                      <parameter key="fraud" value="1.0"/>
+                      <parameter key="correct" value="0.01"/>
+                    </list>
+                    <list key="sample_probability_per_class">
+                      <parameter key="false" value="0.02"/>
+                      <parameter key="true" value="1.0"/>
+                    </list>
+                    <parameter key="use_local_random_seed" value="true"/>
+                    <parameter key="local_random_seed" value="2020"/>
+                  </operator>
+                  <operator activated="true" class="support_vector_machine" compatibility="9.6.000" expanded="true" height="124" name="SVM" width="90" x="179" y="34">
+                    <parameter key="kernel_type" value="polynomial"/>
+                    <parameter key="kernel_gamma" value="1.0"/>
+                    <parameter key="kernel_sigma1" value="1.0"/>
+                    <parameter key="kernel_sigma2" value="0.0"/>
+                    <parameter key="kernel_sigma3" value="2.0"/>
+                    <parameter key="kernel_shift" value="1.0"/>
+                    <parameter key="kernel_degree" value="3.0"/>
+                    <parameter key="kernel_a" value="1.0"/>
+                    <parameter key="kernel_b" value="0.0"/>
+                    <parameter key="kernel_cache" value="200"/>
+                    <parameter key="C" value="0.0"/>
+                    <parameter key="convergence_epsilon" value="0.001"/>
+                    <parameter key="max_iterations" value="100000"/>
+                    <parameter key="scale" value="true"/>
+                    <parameter key="calculate_weights" value="true"/>
+                    <parameter key="return_optimization_performance" value="true"/>
+                    <parameter key="L_pos" value="1.0"/>
+                    <parameter key="L_neg" value="1.0"/>
+                    <parameter key="epsilon" value="0.0"/>
+                    <parameter key="epsilon_plus" value="0.0"/>
+                    <parameter key="epsilon_minus" value="0.0"/>
+                    <parameter key="balance_cost" value="false"/>
+                    <parameter key="quadratic_loss_pos" value="false"/>
+                    <parameter key="quadratic_loss_neg" value="false"/>
+                    <parameter key="estimate_performance" value="false"/>
+                  </operator>
+                  <connect from_port="training set" to_op="Sample: SVM" to_port="example set input"/>
+                  <connect from_op="Sample: SVM" from_port="example set output" to_op="SVM" to_port="training set"/>
+                  <connect from_op="SVM" from_port="model" to_port="model"/>
+                  <portSpacing port="source_training set" spacing="0"/>
+                  <portSpacing port="sink_model" spacing="0"/>
+                  <portSpacing port="sink_through 1" spacing="0"/>
+                </process>
+                <process expanded="true">
+                  <operator activated="true" class="apply_model" compatibility="9.6.000" expanded="true" height="82" name="Score Training Data: SVM" width="90" x="45" y="34">
+                    <list key="application_parameters"/>
+                    <parameter key="create_view" value="false"/>
+                  </operator>
+                  <operator activated="true" class="performance_binominal_classification" compatibility="9.6.000" expanded="true" height="82" name="Training Performance: SVM" width="90" x="179" y="34">
+                    <parameter key="manually_set_positive_class" value="true"/>
+                    <parameter key="positive_class" value="fraud"/>
+                    <parameter key="main_criterion" value="recall"/>
+                    <parameter key="accuracy" value="true"/>
+                    <parameter key="classification_error" value="false"/>
+                    <parameter key="kappa" value="false"/>
+                    <parameter key="AUC (optimistic)" value="false"/>
+                    <parameter key="AUC" value="false"/>
+                    <parameter key="AUC (pessimistic)" value="false"/>
+                    <parameter key="precision" value="false"/>
+                    <parameter key="recall" value="true"/>
+                    <parameter key="lift" value="false"/>
+                    <parameter key="fallout" value="false"/>
+                    <parameter key="f_measure" value="false"/>
+                    <parameter key="false_positive" value="true"/>
+                    <parameter key="false_negative" value="false"/>
+                    <parameter key="true_positive" value="false"/>
+                    <parameter key="true_negative" value="false"/>
+                    <parameter key="sensitivity" value="false"/>
+                    <parameter key="specificity" value="false"/>
+                    <parameter key="youden" value="false"/>
+                    <parameter key="positive_predictive_value" value="false"/>
+                    <parameter key="negative_predictive_value" value="false"/>
+                    <parameter key="psep" value="false"/>
+                    <parameter key="skip_undefined_labels" value="true"/>
+                    <parameter key="use_example_weights" value="true"/>
+                  </operator>
+                  <connect from_port="model" to_op="Score Training Data: SVM" to_port="model"/>
+                  <connect from_port="test set" to_op="Score Training Data: SVM" to_port="unlabelled data"/>
+                  <connect from_op="Score Training Data: SVM" from_port="labelled data" to_op="Training Performance: SVM" to_port="labelled data"/>
+                  <connect from_op="Training Performance: SVM" from_port="performance" to_port="performance 1"/>
+                  <connect from_op="Training Performance: SVM" from_port="example set" to_port="test set results"/>
+                  <portSpacing port="source_model" spacing="0"/>
+                  <portSpacing port="source_test set" spacing="0"/>
+                  <portSpacing port="source_through 1" spacing="0"/>
+                  <portSpacing port="sink_test set results" spacing="0"/>
+                  <portSpacing port="sink_performance 1" spacing="0"/>
+                  <portSpacing port="sink_performance 2" spacing="0"/>
+                </process>
+              </operator>
+              <operator activated="true" class="log" compatibility="9.6.000" expanded="true" height="82" name="Log: SVM" width="90" x="246" y="34">
+                <list key="log">
+                  <parameter key="kernel_degree" value="operator.SVM.parameter.kernel_degree"/>
+                  <parameter key="accuracy" value="operator.Cross Validation: SVM.value.performance 1"/>
+                  <parameter key="recall" value="operator.Cross Validation: SVM.value.performance 2"/>
+                  <parameter key="false positive" value="operator.Cross Validation: SVM.value.performance 3"/>
+                </list>
+                <parameter key="sorting_type" value="none"/>
+                <parameter key="sorting_k" value="100"/>
+                <parameter key="persistent" value="false"/>
+              </operator>
+              <connect from_port="input 1" to_op="Cross Validation: SVM" to_port="example set"/>
+              <connect from_op="Cross Validation: SVM" from_port="model" to_port="model"/>
+              <connect from_op="Cross Validation: SVM" from_port="test result set" to_port="output 1"/>
+              <connect from_op="Cross Validation: SVM" from_port="performance 1" to_op="Log: SVM" to_port="through 1"/>
+              <connect from_op="Log: SVM" from_port="through 1" to_port="performance"/>
+              <portSpacing port="source_input 1" spacing="0"/>
+              <portSpacing port="source_input 2" spacing="0"/>
+              <portSpacing port="sink_performance" spacing="0"/>
+              <portSpacing port="sink_model" spacing="0"/>
+              <portSpacing port="sink_output 1" spacing="0"/>
+              <portSpacing port="sink_output 2" spacing="0"/>
+            </process>
+          </operator>
+          <operator activated="true" class="log_to_data" compatibility="9.6.000" expanded="true" height="103" name="Log to Data: SVM" width="90" x="514" y="34">
+            <parameter key="log_name" value="Log: SVM"/>
+          </operator>
+          <operator activated="true" class="apply_model" compatibility="9.6.000" expanded="true" height="82" name="Score Test Data: SVM" width="90" x="447" y="187">
+            <list key="application_parameters"/>
+            <parameter key="create_view" value="false"/>
+          </operator>
+          <operator activated="true" class="find_threshold" compatibility="9.6.000" expanded="true" height="82" name="Find Threshold: SVM" width="90" x="179" y="340">
+            <parameter key="define_labels" value="true"/>
+            <parameter key="first_label" value="correct"/>
+            <parameter key="second_label" value="fraud"/>
+            <parameter key="misclassification_costs_first" value="1.0"/>
+            <parameter key="misclassification_costs_second" value="10.0"/>
+            <parameter key="show_roc_plot" value="false"/>
+            <parameter key="use_example_weights" value="true"/>
+            <parameter key="roc_bias" value="optimistic"/>
+          </operator>
+          <operator activated="true" class="store" compatibility="9.6.000" expanded="true" height="68" name="Store HP Log: SVM" width="90" x="715" y="238">
+            <parameter key="repository_entry" value="Exam-1-Model-Comparison-02-HP-Log-SVM"/>
+          </operator>
+          <operator activated="true" class="store" compatibility="9.6.000" expanded="true" height="68" name="Store TH: SVM" width="90" x="313" y="391">
+            <parameter key="repository_entry" value="Exam-1-Model-Comparison-02-Threshold-SVM"/>
+          </operator>
+          <operator activated="true" class="apply_threshold" compatibility="9.6.000" expanded="true" height="82" name="Apply Threshold: SVM" width="90" x="447" y="340"/>
+          <operator activated="true" class="performance_binominal_classification" compatibility="9.6.000" expanded="true" height="82" name="Testing Performance: SVM" width="90" x="581" y="289">
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="fraud"/>
+            <parameter key="main_criterion" value="first"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="classification_error" value="false"/>
+            <parameter key="kappa" value="false"/>
+            <parameter key="AUC (optimistic)" value="false"/>
+            <parameter key="AUC" value="false"/>
+            <parameter key="AUC (pessimistic)" value="false"/>
+            <parameter key="precision" value="false"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="lift" value="false"/>
+            <parameter key="fallout" value="false"/>
+            <parameter key="f_measure" value="false"/>
+            <parameter key="false_positive" value="true"/>
+            <parameter key="false_negative" value="true"/>
+            <parameter key="true_positive" value="false"/>
+            <parameter key="true_negative" value="false"/>
+            <parameter key="sensitivity" value="false"/>
+            <parameter key="specificity" value="false"/>
+            <parameter key="youden" value="false"/>
+            <parameter key="positive_predictive_value" value="false"/>
+            <parameter key="negative_predictive_value" value="false"/>
+            <parameter key="psep" value="false"/>
+            <parameter key="skip_undefined_labels" value="true"/>
+            <parameter key="use_example_weights" value="true"/>
+          </operator>
+          <operator activated="true" class="subprocess" compatibility="9.6.000" expanded="true" height="103" name="Extract Performance: SVM" width="90" x="715" y="340">
+            <process expanded="true">
+              <operator activated="true" class="performance_to_data" compatibility="9.6.000" expanded="true" height="82" name="Performance to Data: SVM" width="90" x="45" y="34"/>
+              <operator activated="true" class="transpose" compatibility="9.6.000" expanded="true" height="82" name="Transpose Performance Data: SVM" width="90" x="45" y="187"/>
+              <operator activated="true" class="rename" compatibility="9.6.000" expanded="true" height="82" name="Rename Performance Attributes: SVM" width="90" x="179" y="187">
+                <parameter key="old_name" value="att_1"/>
+                <parameter key="new_name" value="accuracy"/>
+                <list key="rename_additional_attributes">
+                  <parameter key="att_2" value="recall"/>
+                  <parameter key="att_3" value="false positive"/>
+                  <parameter key="att_4" value="false negative"/>
+                </list>
+              </operator>
+              <operator activated="true" class="filter_examples" compatibility="9.6.000" expanded="true" height="103" name="Remove Non-Required Examples: SVM" width="90" x="313" y="187">
+                <parameter key="parameter_expression" value=""/>
+                <parameter key="condition_class" value="custom_filters"/>
+                <parameter key="invert_filter" value="false"/>
+                <list key="filters_list">
+                  <parameter key="filters_entry_key" value="id.equals.Value"/>
+                </list>
+                <parameter key="filters_logic_and" value="true"/>
+                <parameter key="filters_check_metadata" value="true"/>
+              </operator>
+              <operator activated="true" class="select_attributes" compatibility="9.6.000" expanded="true" height="82" name="Remove ID Attribute: SVM" width="90" x="45" y="340">
+                <parameter key="attribute_filter_type" value="single"/>
+                <parameter key="attribute" value="id"/>
+                <parameter key="attributes" value=""/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="attribute_value"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="time"/>
+                <parameter key="block_type" value="attribute_block"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="value_matrix_row_start"/>
+                <parameter key="invert_selection" value="true"/>
+                <parameter key="include_special_attributes" value="true"/>
+              </operator>
+              <operator activated="true" class="parse_numbers" compatibility="9.6.000" expanded="true" height="82" name="Parse Numeric Attributes: SVM" width="90" x="179" y="340">
+                <parameter key="attribute_filter_type" value="all"/>
+                <parameter key="attribute" value=""/>
+                <parameter key="attributes" value=""/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="nominal"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="file_path"/>
+                <parameter key="block_type" value="single_value"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="single_value"/>
+                <parameter key="invert_selection" value="false"/>
+                <parameter key="include_special_attributes" value="false"/>
+                <parameter key="decimal_character" value="."/>
+                <parameter key="grouped_digits" value="false"/>
+                <parameter key="grouping_character" value=","/>
+                <parameter key="infinity_representation" value=""/>
+                <parameter key="unparsable_value_handling" value="fail"/>
+              </operator>
+              <operator activated="true" class="generate_attributes" compatibility="9.6.000" expanded="true" height="82" name="Add Model Attribute: SVM" width="90" x="313" y="340">
+                <list key="function_descriptions">
+                  <parameter key="model" value="&quot;Support Vector Machines&quot;"/>
+                </list>
+                <parameter key="keep_all" value="true"/>
+              </operator>
+              <connect from_port="in 1" to_op="Performance to Data: SVM" to_port="performance vector"/>
+              <connect from_op="Performance to Data: SVM" from_port="example set" to_op="Transpose Performance Data: SVM" to_port="example set input"/>
+              <connect from_op="Performance to Data: SVM" from_port="performance vector" to_port="out 1"/>
+              <connect from_op="Transpose Performance Data: SVM" from_port="example set output" to_op="Rename Performance Attributes: SVM" to_port="example set input"/>
+              <connect from_op="Rename Performance Attributes: SVM" from_port="example set output" to_op="Remove Non-Required Examples: SVM" to_port="example set input"/>
+              <connect from_op="Remove Non-Required Examples: SVM" from_port="example set output" to_op="Remove ID Attribute: SVM" to_port="example set input"/>
+              <connect from_op="Remove ID Attribute: SVM" from_port="example set output" to_op="Parse Numeric Attributes: SVM" to_port="example set input"/>
+              <connect from_op="Parse Numeric Attributes: SVM" from_port="example set output" to_op="Add Model Attribute: SVM" to_port="example set input"/>
+              <connect from_op="Add Model Attribute: SVM" from_port="example set output" to_port="out 2"/>
+              <portSpacing port="source_in 1" spacing="0"/>
+              <portSpacing port="source_in 2" spacing="0"/>
+              <portSpacing port="sink_out 1" spacing="0"/>
+              <portSpacing port="sink_out 2" spacing="0"/>
+              <portSpacing port="sink_out 3" spacing="0"/>
+            </process>
+          </operator>
+          <operator activated="true" class="store" compatibility="9.6.000" expanded="true" height="68" name="Store Model: SVM" width="90" x="715" y="136">
+            <parameter key="repository_entry" value="Exam-1-Model-Comparison-02-Model-SVM"/>
+          </operator>
+          <connect from_port="in 1" to_op="Optimize Parameters: SVM" to_port="input 1"/>
+          <connect from_port="in 2" to_op="Score Test Data: SVM" to_port="unlabelled data"/>
+          <connect from_op="Optimize Parameters: SVM" from_port="performance" to_op="Log to Data: SVM" to_port="through 1"/>
+          <connect from_op="Optimize Parameters: SVM" from_port="model" to_op="Score Test Data: SVM" to_port="model"/>
+          <connect from_op="Optimize Parameters: SVM" from_port="output 1" to_op="Find Threshold: SVM" to_port="example set"/>
+          <connect from_op="Log to Data: SVM" from_port="exampleSet" to_op="Store HP Log: SVM" to_port="input"/>
+          <connect from_op="Log to Data: SVM" from_port="through 1" to_port="out 2"/>
+          <connect from_op="Score Test Data: SVM" from_port="labelled data" to_op="Apply Threshold: SVM" to_port="example set"/>
+          <connect from_op="Score Test Data: SVM" from_port="model" to_op="Store Model: SVM" to_port="input"/>
+          <connect from_op="Find Threshold: SVM" from_port="threshold" to_op="Store TH: SVM" to_port="input"/>
+          <connect from_op="Store TH: SVM" from_port="through" to_op="Apply Threshold: SVM" to_port="threshold"/>
+          <connect from_op="Apply Threshold: SVM" from_port="example set" to_op="Testing Performance: SVM" to_port="labelled data"/>
+          <connect from_op="Testing Performance: SVM" from_port="performance" to_op="Extract Performance: SVM" to_port="in 1"/>
+          <connect from_op="Extract Performance: SVM" from_port="out 1" to_port="out 3"/>
+          <connect from_op="Extract Performance: SVM" from_port="out 2" to_port="out 4"/>
+          <connect from_op="Store Model: SVM" from_port="through" to_port="out 1"/>
+          <portSpacing port="source_in 1" spacing="0"/>
+          <portSpacing port="source_in 2" spacing="0"/>
+          <portSpacing port="source_in 3" spacing="0"/>
+          <portSpacing port="sink_out 1" spacing="0"/>
+          <portSpacing port="sink_out 2" spacing="0"/>
+          <portSpacing port="sink_out 3" spacing="0"/>
+          <portSpacing port="sink_out 4" spacing="0"/>
+          <portSpacing port="sink_out 5" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="subprocess" compatibility="9.6.000" expanded="true" height="145" name="with Ensembler" width="90" x="715" y="1360">
+        <process expanded="true">
+          <operator activated="true" class="concurrency:cross_validation" compatibility="9.6.000" expanded="true" height="145" name="Cross Validation: Ensembler" width="90" x="313" y="34">
+            <parameter key="split_on_batch_attribute" value="false"/>
+            <parameter key="leave_one_out" value="false"/>
+            <parameter key="number_of_folds" value="10"/>
+            <parameter key="sampling_type" value="stratified sampling"/>
+            <parameter key="use_local_random_seed" value="true"/>
+            <parameter key="local_random_seed" value="2020"/>
+            <parameter key="enable_parallel_execution" value="true"/>
+            <process expanded="true">
+              <operator activated="true" class="sample" compatibility="9.6.000" expanded="true" height="82" name="Sample: Ensembler" origin="GENERATED_TEMPLATE" width="90" x="45" y="34">
+                <parameter key="sample" value="relative"/>
+                <parameter key="balance_data" value="true"/>
+                <parameter key="sample_size" value="100"/>
+                <parameter key="sample_ratio" value="0.1"/>
+                <parameter key="sample_probability" value="0.1"/>
+                <list key="sample_size_per_class"/>
+                <list key="sample_ratio_per_class">
+                  <parameter key="fraud" value="1.0"/>
+                  <parameter key="correct" value="0.01"/>
+                </list>
+                <list key="sample_probability_per_class">
+                  <parameter key="false" value="0.02"/>
+                  <parameter key="true" value="1.0"/>
+                </list>
+                <parameter key="use_local_random_seed" value="true"/>
+                <parameter key="local_random_seed" value="2020"/>
+              </operator>
+              <operator activated="true" class="vote" compatibility="9.6.000" expanded="true" height="68" name="Vote: Ensembler" origin="GENERATED_TUTORIAL" width="90" x="179" y="34">
+                <process expanded="true">
+                  <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="9.6.000" expanded="true" height="103" name="Decision Tree: Ensembler" width="90" x="313" y="34">
+                    <parameter key="criterion" value="information_gain"/>
+                    <parameter key="maximal_depth" value="56"/>
+                    <parameter key="apply_pruning" value="true"/>
+                    <parameter key="confidence" value="0.1"/>
+                    <parameter key="apply_prepruning" value="true"/>
+                    <parameter key="minimal_gain" value="0.01"/>
+                    <parameter key="minimal_leaf_size" value="2"/>
+                    <parameter key="minimal_size_for_split" value="4"/>
+                    <parameter key="number_of_prepruning_alternatives" value="3"/>
+                  </operator>
+                  <operator activated="true" class="naive_bayes" compatibility="9.6.000" expanded="true" height="82" name="Naive Bayes: Ensembler" width="90" x="313" y="187">
+                    <parameter key="laplace_correction" value="false"/>
+                  </operator>
+                  <operator activated="true" class="h2o:logistic_regression" compatibility="9.3.001" expanded="true" height="124" name="Logistic Regression: Ensembler" width="90" x="313" y="340">
+                    <parameter key="solver" value="AUTO"/>
+                    <parameter key="reproducible" value="true"/>
+                    <parameter key="maximum_number_of_threads" value="2"/>
+                    <parameter key="use_regularization" value="false"/>
+                    <parameter key="lambda_search" value="false"/>
+                    <parameter key="number_of_lambdas" value="0"/>
+                    <parameter key="lambda_min_ratio" value="0.0"/>
+                    <parameter key="early_stopping" value="true"/>
+                    <parameter key="stopping_rounds" value="3"/>
+                    <parameter key="stopping_tolerance" value="0.001"/>
+                    <parameter key="standardize" value="false"/>
+                    <parameter key="non-negative_coefficients" value="false"/>
+                    <parameter key="add_intercept" value="true"/>
+                    <parameter key="compute_p-values" value="true"/>
+                    <parameter key="remove_collinear_columns" value="true"/>
+                    <parameter key="missing_values_handling" value="Skip"/>
+                    <parameter key="max_iterations" value="3"/>
+                    <parameter key="max_runtime_seconds" value="0"/>
+                  </operator>
+                  <connect from_port="training set 1" to_op="Decision Tree: Ensembler" to_port="training set"/>
+                  <connect from_port="training set 2" to_op="Naive Bayes: Ensembler" to_port="training set"/>
+                  <connect from_port="training set 3" to_op="Logistic Regression: Ensembler" to_port="training set"/>
+                  <connect from_op="Decision Tree: Ensembler" from_port="model" to_port="base model 1"/>
+                  <connect from_op="Naive Bayes: Ensembler" from_port="model" to_port="base model 2"/>
+                  <connect from_op="Logistic Regression: Ensembler" from_port="model" to_port="base model 3"/>
+                  <portSpacing port="source_training set 1" spacing="0"/>
+                  <portSpacing port="source_training set 2" spacing="0"/>
+                  <portSpacing port="source_training set 3" spacing="0"/>
+                  <portSpacing port="source_training set 4" spacing="0"/>
+                  <portSpacing port="sink_base model 1" spacing="0"/>
+                  <portSpacing port="sink_base model 2" spacing="0"/>
+                  <portSpacing port="sink_base model 3" spacing="0"/>
+                  <portSpacing port="sink_base model 4" spacing="0"/>
+                </process>
+              </operator>
+              <connect from_port="training set" to_op="Sample: Ensembler" to_port="example set input"/>
+              <connect from_op="Sample: Ensembler" from_port="example set output" to_op="Vote: Ensembler" to_port="training set"/>
+              <connect from_op="Vote: Ensembler" from_port="model" to_port="model"/>
+              <portSpacing port="source_training set" spacing="0"/>
+              <portSpacing port="sink_model" spacing="0"/>
+              <portSpacing port="sink_through 1" spacing="0"/>
+            </process>
+            <process expanded="true">
+              <operator activated="true" class="apply_model" compatibility="9.6.000" expanded="true" height="82" name="Score Training Data: Ensembler" width="90" x="45" y="34">
+                <list key="application_parameters"/>
+                <parameter key="create_view" value="false"/>
+              </operator>
+              <operator activated="true" class="performance_binominal_classification" compatibility="9.6.000" expanded="true" height="82" name="Training Performance: Ensembler" width="90" x="179" y="34">
+                <parameter key="manually_set_positive_class" value="true"/>
+                <parameter key="positive_class" value="fraud"/>
+                <parameter key="main_criterion" value="recall"/>
+                <parameter key="accuracy" value="true"/>
+                <parameter key="classification_error" value="false"/>
+                <parameter key="kappa" value="false"/>
+                <parameter key="AUC (optimistic)" value="false"/>
+                <parameter key="AUC" value="false"/>
+                <parameter key="AUC (pessimistic)" value="false"/>
+                <parameter key="precision" value="false"/>
+                <parameter key="recall" value="true"/>
+                <parameter key="lift" value="false"/>
+                <parameter key="fallout" value="false"/>
+                <parameter key="f_measure" value="false"/>
+                <parameter key="false_positive" value="true"/>
+                <parameter key="false_negative" value="false"/>
+                <parameter key="true_positive" value="false"/>
+                <parameter key="true_negative" value="false"/>
+                <parameter key="sensitivity" value="false"/>
+                <parameter key="specificity" value="false"/>
+                <parameter key="youden" value="false"/>
+                <parameter key="positive_predictive_value" value="false"/>
+                <parameter key="negative_predictive_value" value="false"/>
+                <parameter key="psep" value="false"/>
+                <parameter key="skip_undefined_labels" value="true"/>
+                <parameter key="use_example_weights" value="true"/>
+              </operator>
+              <connect from_port="model" to_op="Score Training Data: Ensembler" to_port="model"/>
+              <connect from_port="test set" to_op="Score Training Data: Ensembler" to_port="unlabelled data"/>
+              <connect from_op="Score Training Data: Ensembler" from_port="labelled data" to_op="Training Performance: Ensembler" to_port="labelled data"/>
+              <connect from_op="Training Performance: Ensembler" from_port="performance" to_port="performance 1"/>
+              <connect from_op="Training Performance: Ensembler" from_port="example set" to_port="test set results"/>
+              <portSpacing port="source_model" spacing="0"/>
+              <portSpacing port="source_test set" spacing="0"/>
+              <portSpacing port="source_through 1" spacing="0"/>
+              <portSpacing port="sink_test set results" spacing="0"/>
+              <portSpacing port="sink_performance 1" spacing="0"/>
+              <portSpacing port="sink_performance 2" spacing="0"/>
+            </process>
+          </operator>
+          <operator activated="true" class="apply_model" compatibility="9.6.000" expanded="true" height="82" name="Score Test Data: Ensembler" width="90" x="447" y="187">
+            <list key="application_parameters"/>
+            <parameter key="create_view" value="false"/>
+          </operator>
+          <operator activated="true" class="find_threshold" compatibility="9.6.000" expanded="true" height="82" name="Find Threshold: Ensembler" width="90" x="179" y="340">
+            <parameter key="define_labels" value="true"/>
+            <parameter key="first_label" value="correct"/>
+            <parameter key="second_label" value="fraud"/>
+            <parameter key="misclassification_costs_first" value="1.0"/>
+            <parameter key="misclassification_costs_second" value="10.0"/>
+            <parameter key="show_roc_plot" value="false"/>
+            <parameter key="use_example_weights" value="true"/>
+            <parameter key="roc_bias" value="optimistic"/>
+          </operator>
+          <operator activated="true" class="store" compatibility="9.6.000" expanded="true" height="68" name="Store TH: Ensembler" width="90" x="313" y="391">
+            <parameter key="repository_entry" value="Exam-1-Model-Comparison-02-Threshold-Ensembler"/>
+          </operator>
+          <operator activated="true" class="apply_threshold" compatibility="9.6.000" expanded="true" height="82" name="Apply Threshold: Ensembler" width="90" x="447" y="340"/>
+          <operator activated="true" class="performance_binominal_classification" compatibility="9.6.000" expanded="true" height="82" name="Testing Performance: Ensembler" width="90" x="581" y="289">
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="fraud"/>
+            <parameter key="main_criterion" value="first"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="classification_error" value="false"/>
+            <parameter key="kappa" value="false"/>
+            <parameter key="AUC (optimistic)" value="false"/>
+            <parameter key="AUC" value="false"/>
+            <parameter key="AUC (pessimistic)" value="false"/>
+            <parameter key="precision" value="false"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="lift" value="false"/>
+            <parameter key="fallout" value="false"/>
+            <parameter key="f_measure" value="false"/>
+            <parameter key="false_positive" value="true"/>
+            <parameter key="false_negative" value="true"/>
+            <parameter key="true_positive" value="false"/>
+            <parameter key="true_negative" value="false"/>
+            <parameter key="sensitivity" value="false"/>
+            <parameter key="specificity" value="false"/>
+            <parameter key="youden" value="false"/>
+            <parameter key="positive_predictive_value" value="false"/>
+            <parameter key="negative_predictive_value" value="false"/>
+            <parameter key="psep" value="false"/>
+            <parameter key="skip_undefined_labels" value="true"/>
+            <parameter key="use_example_weights" value="true"/>
+          </operator>
+          <operator activated="true" class="subprocess" compatibility="9.6.000" expanded="true" height="103" name="Extract Performance: Ensembler" width="90" x="715" y="289">
+            <process expanded="true">
+              <operator activated="true" class="performance_to_data" compatibility="9.6.000" expanded="true" height="82" name="Performance to Data: Ensembler" width="90" x="45" y="34"/>
+              <operator activated="true" class="transpose" compatibility="9.6.000" expanded="true" height="82" name="Transpose Performance Data: Ensembler" width="90" x="45" y="187"/>
+              <operator activated="true" class="rename" compatibility="9.6.000" expanded="true" height="82" name="Rename Performance Attributes: Ensembler" width="90" x="179" y="187">
+                <parameter key="old_name" value="att_1"/>
+                <parameter key="new_name" value="accuracy"/>
+                <list key="rename_additional_attributes">
+                  <parameter key="att_2" value="recall"/>
+                  <parameter key="att_3" value="false positive"/>
+                  <parameter key="att_4" value="false negative"/>
+                </list>
+              </operator>
+              <operator activated="true" class="filter_examples" compatibility="9.6.000" expanded="true" height="103" name="Remove Non-Required Examples: Ensembler" width="90" x="313" y="187">
+                <parameter key="parameter_expression" value=""/>
+                <parameter key="condition_class" value="custom_filters"/>
+                <parameter key="invert_filter" value="false"/>
+                <list key="filters_list">
+                  <parameter key="filters_entry_key" value="id.equals.Value"/>
+                </list>
+                <parameter key="filters_logic_and" value="true"/>
+                <parameter key="filters_check_metadata" value="true"/>
+              </operator>
+              <operator activated="true" class="select_attributes" compatibility="9.6.000" expanded="true" height="82" name="Remove ID Attribute: Ensembler" width="90" x="45" y="340">
+                <parameter key="attribute_filter_type" value="single"/>
+                <parameter key="attribute" value="id"/>
+                <parameter key="attributes" value=""/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="attribute_value"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="time"/>
+                <parameter key="block_type" value="attribute_block"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="value_matrix_row_start"/>
+                <parameter key="invert_selection" value="true"/>
+                <parameter key="include_special_attributes" value="true"/>
+              </operator>
+              <operator activated="true" class="parse_numbers" compatibility="9.6.000" expanded="true" height="82" name="Parse Numeric Attributes: Ensembler" width="90" x="179" y="340">
+                <parameter key="attribute_filter_type" value="all"/>
+                <parameter key="attribute" value=""/>
+                <parameter key="attributes" value=""/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="nominal"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="file_path"/>
+                <parameter key="block_type" value="single_value"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="single_value"/>
+                <parameter key="invert_selection" value="false"/>
+                <parameter key="include_special_attributes" value="false"/>
+                <parameter key="decimal_character" value="."/>
+                <parameter key="grouped_digits" value="false"/>
+                <parameter key="grouping_character" value=","/>
+                <parameter key="infinity_representation" value=""/>
+                <parameter key="unparsable_value_handling" value="fail"/>
+              </operator>
+              <operator activated="true" class="generate_attributes" compatibility="9.6.000" expanded="true" height="82" name="Add Model Attribute: Ensembler" width="90" x="313" y="340">
+                <list key="function_descriptions">
+                  <parameter key="model" value="&quot;Ensembler&quot;"/>
+                </list>
+                <parameter key="keep_all" value="true"/>
+              </operator>
+              <connect from_port="in 1" to_op="Performance to Data: Ensembler" to_port="performance vector"/>
+              <connect from_op="Performance to Data: Ensembler" from_port="example set" to_op="Transpose Performance Data: Ensembler" to_port="example set input"/>
+              <connect from_op="Performance to Data: Ensembler" from_port="performance vector" to_port="out 1"/>
+              <connect from_op="Transpose Performance Data: Ensembler" from_port="example set output" to_op="Rename Performance Attributes: Ensembler" to_port="example set input"/>
+              <connect from_op="Rename Performance Attributes: Ensembler" from_port="example set output" to_op="Remove Non-Required Examples: Ensembler" to_port="example set input"/>
+              <connect from_op="Remove Non-Required Examples: Ensembler" from_port="example set output" to_op="Remove ID Attribute: Ensembler" to_port="example set input"/>
+              <connect from_op="Remove ID Attribute: Ensembler" from_port="example set output" to_op="Parse Numeric Attributes: Ensembler" to_port="example set input"/>
+              <connect from_op="Parse Numeric Attributes: Ensembler" from_port="example set output" to_op="Add Model Attribute: Ensembler" to_port="example set input"/>
+              <connect from_op="Add Model Attribute: Ensembler" from_port="example set output" to_port="out 2"/>
+              <portSpacing port="source_in 1" spacing="0"/>
+              <portSpacing port="source_in 2" spacing="0"/>
+              <portSpacing port="sink_out 1" spacing="0"/>
+              <portSpacing port="sink_out 2" spacing="0"/>
+              <portSpacing port="sink_out 3" spacing="0"/>
+            </process>
+          </operator>
+          <operator activated="true" class="store" compatibility="9.6.000" expanded="true" height="68" name="Store Model: Ensembler" width="90" x="648" y="187">
+            <parameter key="repository_entry" value="Exam-1-Model-Comparison-02-Model-Ensembler"/>
+          </operator>
+          <connect from_port="in 1" to_op="Cross Validation: Ensembler" to_port="example set"/>
+          <connect from_port="in 2" to_op="Score Test Data: Ensembler" to_port="unlabelled data"/>
+          <connect from_op="Cross Validation: Ensembler" from_port="model" to_op="Score Test Data: Ensembler" to_port="model"/>
+          <connect from_op="Cross Validation: Ensembler" from_port="test result set" to_op="Find Threshold: Ensembler" to_port="example set"/>
+          <connect from_op="Cross Validation: Ensembler" from_port="performance 1" to_port="out 2"/>
+          <connect from_op="Score Test Data: Ensembler" from_port="labelled data" to_op="Apply Threshold: Ensembler" to_port="example set"/>
+          <connect from_op="Score Test Data: Ensembler" from_port="model" to_op="Store Model: Ensembler" to_port="input"/>
+          <connect from_op="Find Threshold: Ensembler" from_port="threshold" to_op="Store TH: Ensembler" to_port="input"/>
+          <connect from_op="Store TH: Ensembler" from_port="through" to_op="Apply Threshold: Ensembler" to_port="threshold"/>
+          <connect from_op="Apply Threshold: Ensembler" from_port="example set" to_op="Testing Performance: Ensembler" to_port="labelled data"/>
+          <connect from_op="Testing Performance: Ensembler" from_port="performance" to_op="Extract Performance: Ensembler" to_port="in 1"/>
+          <connect from_op="Extract Performance: Ensembler" from_port="out 1" to_port="out 3"/>
+          <connect from_op="Extract Performance: Ensembler" from_port="out 2" to_port="out 4"/>
+          <connect from_op="Store Model: Ensembler" from_port="through" to_port="out 1"/>
+          <portSpacing port="source_in 1" spacing="0"/>
+          <portSpacing port="source_in 2" spacing="0"/>
+          <portSpacing port="source_in 3" spacing="0"/>
+          <portSpacing port="sink_out 1" spacing="0"/>
+          <portSpacing port="sink_out 2" spacing="0"/>
+          <portSpacing port="sink_out 3" spacing="0"/>
+          <portSpacing port="sink_out 4" spacing="0"/>
+          <portSpacing port="sink_out 5" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="subprocess" compatibility="9.6.000" expanded="true" height="145" name="with k-NN" width="90" x="715" y="1105">
+        <process expanded="true">
+          <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="9.6.000" expanded="true" height="145" name="Optimize Parameters: k-NN" width="90" x="313" y="34">
+            <list key="parameters">
+              <parameter key="k-NN.k" value="[2;10;9;linear]"/>
+            </list>
+            <parameter key="error_handling" value="fail on error"/>
+            <parameter key="log_performance" value="true"/>
+            <parameter key="log_all_criteria" value="true"/>
+            <parameter key="synchronize" value="false"/>
+            <parameter key="enable_parallel_execution" value="true"/>
+            <process expanded="true">
+              <operator activated="true" class="concurrency:cross_validation" compatibility="9.6.000" expanded="true" height="145" name="Cross Validation: k-NN" width="90" x="45" y="136">
+                <parameter key="split_on_batch_attribute" value="false"/>
+                <parameter key="leave_one_out" value="false"/>
+                <parameter key="number_of_folds" value="10"/>
+                <parameter key="sampling_type" value="stratified sampling"/>
+                <parameter key="use_local_random_seed" value="true"/>
+                <parameter key="local_random_seed" value="2020"/>
+                <parameter key="enable_parallel_execution" value="true"/>
+                <process expanded="true">
+                  <operator activated="true" class="sample" compatibility="9.6.000" expanded="true" height="82" name="Sample: k-NN" origin="GENERATED_TEMPLATE" width="90" x="45" y="34">
+                    <parameter key="sample" value="relative"/>
+                    <parameter key="balance_data" value="true"/>
+                    <parameter key="sample_size" value="100"/>
+                    <parameter key="sample_ratio" value="0.1"/>
+                    <parameter key="sample_probability" value="0.1"/>
+                    <list key="sample_size_per_class"/>
+                    <list key="sample_ratio_per_class">
+                      <parameter key="fraud" value="1.0"/>
+                      <parameter key="correct" value="0.01"/>
+                    </list>
+                    <list key="sample_probability_per_class">
+                      <parameter key="false" value="0.02"/>
+                      <parameter key="true" value="1.0"/>
+                    </list>
+                    <parameter key="use_local_random_seed" value="true"/>
+                    <parameter key="local_random_seed" value="2020"/>
+                  </operator>
+                  <operator activated="true" class="k_nn" compatibility="9.6.000" expanded="true" height="82" name="k-NN" width="90" x="179" y="34">
+                    <parameter key="k" value="5"/>
+                    <parameter key="weighted_vote" value="true"/>
+                    <parameter key="measure_types" value="MixedMeasures"/>
+                    <parameter key="mixed_measure" value="MixedEuclideanDistance"/>
+                    <parameter key="nominal_measure" value="NominalDistance"/>
+                    <parameter key="numerical_measure" value="EuclideanDistance"/>
+                    <parameter key="divergence" value="GeneralizedIDivergence"/>
+                    <parameter key="kernel_type" value="radial"/>
+                    <parameter key="kernel_gamma" value="1.0"/>
+                    <parameter key="kernel_sigma1" value="1.0"/>
+                    <parameter key="kernel_sigma2" value="0.0"/>
+                    <parameter key="kernel_sigma3" value="2.0"/>
+                    <parameter key="kernel_degree" value="3.0"/>
+                    <parameter key="kernel_shift" value="1.0"/>
+                    <parameter key="kernel_a" value="1.0"/>
+                    <parameter key="kernel_b" value="0.0"/>
+                  </operator>
+                  <connect from_port="training set" to_op="Sample: k-NN" to_port="example set input"/>
+                  <connect from_op="Sample: k-NN" from_port="example set output" to_op="k-NN" to_port="training set"/>
+                  <connect from_op="k-NN" from_port="model" to_port="model"/>
+                  <portSpacing port="source_training set" spacing="0"/>
+                  <portSpacing port="sink_model" spacing="0"/>
+                  <portSpacing port="sink_through 1" spacing="0"/>
+                </process>
+                <process expanded="true">
+                  <operator activated="true" class="apply_model" compatibility="9.6.000" expanded="true" height="82" name="Score Training Data: k-NN" width="90" x="45" y="34">
+                    <list key="application_parameters"/>
+                    <parameter key="create_view" value="false"/>
+                  </operator>
+                  <operator activated="true" class="performance_binominal_classification" compatibility="9.6.000" expanded="true" height="82" name="Training Performance: k-NN" width="90" x="179" y="34">
+                    <parameter key="manually_set_positive_class" value="true"/>
+                    <parameter key="positive_class" value="fraud"/>
+                    <parameter key="main_criterion" value="recall"/>
+                    <parameter key="accuracy" value="true"/>
+                    <parameter key="classification_error" value="false"/>
+                    <parameter key="kappa" value="false"/>
+                    <parameter key="AUC (optimistic)" value="false"/>
+                    <parameter key="AUC" value="false"/>
+                    <parameter key="AUC (pessimistic)" value="false"/>
+                    <parameter key="precision" value="false"/>
+                    <parameter key="recall" value="true"/>
+                    <parameter key="lift" value="false"/>
+                    <parameter key="fallout" value="false"/>
+                    <parameter key="f_measure" value="false"/>
+                    <parameter key="false_positive" value="true"/>
+                    <parameter key="false_negative" value="false"/>
+                    <parameter key="true_positive" value="false"/>
+                    <parameter key="true_negative" value="false"/>
+                    <parameter key="sensitivity" value="false"/>
+                    <parameter key="specificity" value="false"/>
+                    <parameter key="youden" value="false"/>
+                    <parameter key="positive_predictive_value" value="false"/>
+                    <parameter key="negative_predictive_value" value="false"/>
+                    <parameter key="psep" value="false"/>
+                    <parameter key="skip_undefined_labels" value="true"/>
+                    <parameter key="use_example_weights" value="true"/>
+                  </operator>
+                  <connect from_port="model" to_op="Score Training Data: k-NN" to_port="model"/>
+                  <connect from_port="test set" to_op="Score Training Data: k-NN" to_port="unlabelled data"/>
+                  <connect from_op="Score Training Data: k-NN" from_port="labelled data" to_op="Training Performance: k-NN" to_port="labelled data"/>
+                  <connect from_op="Training Performance: k-NN" from_port="performance" to_port="performance 1"/>
+                  <connect from_op="Training Performance: k-NN" from_port="example set" to_port="test set results"/>
+                  <portSpacing port="source_model" spacing="0"/>
+                  <portSpacing port="source_test set" spacing="0"/>
+                  <portSpacing port="source_through 1" spacing="0"/>
+                  <portSpacing port="sink_test set results" spacing="0"/>
+                  <portSpacing port="sink_performance 1" spacing="0"/>
+                  <portSpacing port="sink_performance 2" spacing="0"/>
+                </process>
+              </operator>
+              <operator activated="true" class="log" compatibility="9.6.000" expanded="true" height="82" name="Log: k-NN" width="90" x="246" y="34">
+                <list key="log">
+                  <parameter key="k" value="operator.k-NN.parameter.k"/>
+                  <parameter key="accuracy" value="operator.Cross Validation: k-NN.value.performance 1"/>
+                  <parameter key="recall" value="operator.Cross Validation: k-NN.value.performance 2"/>
+                  <parameter key="false positive" value="operator.Cross Validation: k-NN.value.performance 3"/>
+                </list>
+                <parameter key="sorting_type" value="none"/>
+                <parameter key="sorting_k" value="100"/>
+                <parameter key="persistent" value="false"/>
+              </operator>
+              <connect from_port="input 1" to_op="Cross Validation: k-NN" to_port="example set"/>
+              <connect from_op="Cross Validation: k-NN" from_port="model" to_port="model"/>
+              <connect from_op="Cross Validation: k-NN" from_port="test result set" to_port="output 1"/>
+              <connect from_op="Cross Validation: k-NN" from_port="performance 1" to_op="Log: k-NN" to_port="through 1"/>
+              <connect from_op="Log: k-NN" from_port="through 1" to_port="performance"/>
+              <portSpacing port="source_input 1" spacing="0"/>
+              <portSpacing port="source_input 2" spacing="0"/>
+              <portSpacing port="sink_performance" spacing="0"/>
+              <portSpacing port="sink_model" spacing="0"/>
+              <portSpacing port="sink_output 1" spacing="0"/>
+              <portSpacing port="sink_output 2" spacing="0"/>
+            </process>
+          </operator>
+          <operator activated="true" class="log_to_data" compatibility="9.6.000" expanded="true" height="103" name="Log to Data: k-NN" width="90" x="514" y="34">
+            <parameter key="log_name" value="Log: k-NN"/>
+          </operator>
+          <operator activated="true" class="apply_model" compatibility="9.6.000" expanded="true" height="82" name="Score Test Data: k-NN" width="90" x="447" y="187">
+            <list key="application_parameters"/>
+            <parameter key="create_view" value="false"/>
+          </operator>
+          <operator activated="true" class="find_threshold" compatibility="9.6.000" expanded="true" height="82" name="Find Threshold: k-NN" width="90" x="313" y="442">
+            <parameter key="define_labels" value="true"/>
+            <parameter key="first_label" value="correct"/>
+            <parameter key="second_label" value="fraud"/>
+            <parameter key="misclassification_costs_first" value="1.0"/>
+            <parameter key="misclassification_costs_second" value="10.0"/>
+            <parameter key="show_roc_plot" value="false"/>
+            <parameter key="use_example_weights" value="true"/>
+            <parameter key="roc_bias" value="optimistic"/>
+          </operator>
+          <operator activated="true" class="store" compatibility="9.6.000" expanded="true" height="68" name="Store TH: k-NN" width="90" x="447" y="493">
+            <parameter key="repository_entry" value="Exam-1-Model-Comparison-02-Threshold-k-NN"/>
+          </operator>
+          <operator activated="true" class="apply_threshold" compatibility="9.6.000" expanded="true" height="82" name="Apply Threshold: k-NN" width="90" x="581" y="442"/>
+          <operator activated="true" class="performance_binominal_classification" compatibility="9.6.000" expanded="true" height="82" name="Testing Performance: k-NN" width="90" x="581" y="289">
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="fraud"/>
+            <parameter key="main_criterion" value="first"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="classification_error" value="false"/>
+            <parameter key="kappa" value="false"/>
+            <parameter key="AUC (optimistic)" value="false"/>
+            <parameter key="AUC" value="false"/>
+            <parameter key="AUC (pessimistic)" value="false"/>
+            <parameter key="precision" value="false"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="lift" value="false"/>
+            <parameter key="fallout" value="false"/>
+            <parameter key="f_measure" value="false"/>
+            <parameter key="false_positive" value="true"/>
+            <parameter key="false_negative" value="true"/>
+            <parameter key="true_positive" value="false"/>
+            <parameter key="true_negative" value="false"/>
+            <parameter key="sensitivity" value="false"/>
+            <parameter key="specificity" value="false"/>
+            <parameter key="youden" value="false"/>
+            <parameter key="positive_predictive_value" value="false"/>
+            <parameter key="negative_predictive_value" value="false"/>
+            <parameter key="psep" value="false"/>
+            <parameter key="skip_undefined_labels" value="true"/>
+            <parameter key="use_example_weights" value="true"/>
+          </operator>
+          <operator activated="true" class="subprocess" compatibility="9.6.000" expanded="true" height="103" name="Extract Performance: k-NN" width="90" x="715" y="340">
+            <process expanded="true">
+              <operator activated="true" class="performance_to_data" compatibility="9.6.000" expanded="true" height="82" name="Performance to Data: k-NN" width="90" x="45" y="34"/>
+              <operator activated="true" class="transpose" compatibility="9.6.000" expanded="true" height="82" name="Transpose Performance Data: k-NN" width="90" x="45" y="187"/>
+              <operator activated="true" class="rename" compatibility="9.6.000" expanded="true" height="82" name="Rename Performance Attributes: k-NN" width="90" x="179" y="187">
+                <parameter key="old_name" value="att_1"/>
+                <parameter key="new_name" value="accuracy"/>
+                <list key="rename_additional_attributes">
+                  <parameter key="att_2" value="recall"/>
+                  <parameter key="att_3" value="false positive"/>
+                  <parameter key="att_4" value="false negative"/>
+                </list>
+              </operator>
+              <operator activated="true" class="filter_examples" compatibility="9.6.000" expanded="true" height="103" name="Remove Non-Required Examples: k-NN" width="90" x="313" y="187">
+                <parameter key="parameter_expression" value=""/>
+                <parameter key="condition_class" value="custom_filters"/>
+                <parameter key="invert_filter" value="false"/>
+                <list key="filters_list">
+                  <parameter key="filters_entry_key" value="id.equals.Value"/>
+                </list>
+                <parameter key="filters_logic_and" value="true"/>
+                <parameter key="filters_check_metadata" value="true"/>
+              </operator>
+              <operator activated="true" class="select_attributes" compatibility="9.6.000" expanded="true" height="82" name="Remove ID Attribute: k-NN" width="90" x="45" y="340">
+                <parameter key="attribute_filter_type" value="single"/>
+                <parameter key="attribute" value="id"/>
+                <parameter key="attributes" value=""/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="attribute_value"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="time"/>
+                <parameter key="block_type" value="attribute_block"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="value_matrix_row_start"/>
+                <parameter key="invert_selection" value="true"/>
+                <parameter key="include_special_attributes" value="true"/>
+              </operator>
+              <operator activated="true" class="parse_numbers" compatibility="9.6.000" expanded="true" height="82" name="Parse Numeric Attributes: k-NN" width="90" x="179" y="340">
+                <parameter key="attribute_filter_type" value="all"/>
+                <parameter key="attribute" value=""/>
+                <parameter key="attributes" value=""/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="nominal"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="file_path"/>
+                <parameter key="block_type" value="single_value"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="single_value"/>
+                <parameter key="invert_selection" value="false"/>
+                <parameter key="include_special_attributes" value="false"/>
+                <parameter key="decimal_character" value="."/>
+                <parameter key="grouped_digits" value="false"/>
+                <parameter key="grouping_character" value=","/>
+                <parameter key="infinity_representation" value=""/>
+                <parameter key="unparsable_value_handling" value="fail"/>
+              </operator>
+              <operator activated="true" class="generate_attributes" compatibility="9.6.000" expanded="true" height="82" name="Add Model Attribute: k-NN" width="90" x="313" y="340">
+                <list key="function_descriptions">
+                  <parameter key="model" value="&quot;k-Nearest Neighbor&quot;"/>
+                </list>
+                <parameter key="keep_all" value="true"/>
+              </operator>
+              <connect from_port="in 1" to_op="Performance to Data: k-NN" to_port="performance vector"/>
+              <connect from_op="Performance to Data: k-NN" from_port="example set" to_op="Transpose Performance Data: k-NN" to_port="example set input"/>
+              <connect from_op="Performance to Data: k-NN" from_port="performance vector" to_port="out 1"/>
+              <connect from_op="Transpose Performance Data: k-NN" from_port="example set output" to_op="Rename Performance Attributes: k-NN" to_port="example set input"/>
+              <connect from_op="Rename Performance Attributes: k-NN" from_port="example set output" to_op="Remove Non-Required Examples: k-NN" to_port="example set input"/>
+              <connect from_op="Remove Non-Required Examples: k-NN" from_port="example set output" to_op="Remove ID Attribute: k-NN" to_port="example set input"/>
+              <connect from_op="Remove ID Attribute: k-NN" from_port="example set output" to_op="Parse Numeric Attributes: k-NN" to_port="example set input"/>
+              <connect from_op="Parse Numeric Attributes: k-NN" from_port="example set output" to_op="Add Model Attribute: k-NN" to_port="example set input"/>
+              <connect from_op="Add Model Attribute: k-NN" from_port="example set output" to_port="out 2"/>
+              <portSpacing port="source_in 1" spacing="0"/>
+              <portSpacing port="source_in 2" spacing="0"/>
+              <portSpacing port="sink_out 1" spacing="0"/>
+              <portSpacing port="sink_out 2" spacing="0"/>
+              <portSpacing port="sink_out 3" spacing="0"/>
+            </process>
+          </operator>
+          <operator activated="true" class="store" compatibility="9.6.000" expanded="true" height="68" name="Store HP Log: k-NN" width="90" x="715" y="238">
+            <parameter key="repository_entry" value="Exam-1-Model-Comparison-02-HP-Log-k-NN"/>
+          </operator>
+          <operator activated="true" class="store" compatibility="9.6.000" expanded="true" height="68" name="Store Model: k-NN" width="90" x="715" y="136">
+            <parameter key="repository_entry" value="Exam-1-Model-Comparison-02-Model-k-NN"/>
+          </operator>
+          <connect from_port="in 1" to_op="Optimize Parameters: k-NN" to_port="input 1"/>
+          <connect from_port="in 2" to_op="Score Test Data: k-NN" to_port="unlabelled data"/>
+          <connect from_op="Optimize Parameters: k-NN" from_port="performance" to_op="Log to Data: k-NN" to_port="through 1"/>
+          <connect from_op="Optimize Parameters: k-NN" from_port="model" to_op="Score Test Data: k-NN" to_port="model"/>
+          <connect from_op="Optimize Parameters: k-NN" from_port="output 1" to_op="Find Threshold: k-NN" to_port="example set"/>
+          <connect from_op="Log to Data: k-NN" from_port="exampleSet" to_op="Store HP Log: k-NN" to_port="input"/>
+          <connect from_op="Log to Data: k-NN" from_port="through 1" to_port="out 2"/>
+          <connect from_op="Score Test Data: k-NN" from_port="labelled data" to_op="Apply Threshold: k-NN" to_port="example set"/>
+          <connect from_op="Score Test Data: k-NN" from_port="model" to_op="Store Model: k-NN" to_port="input"/>
+          <connect from_op="Find Threshold: k-NN" from_port="threshold" to_op="Store TH: k-NN" to_port="input"/>
+          <connect from_op="Store TH: k-NN" from_port="through" to_op="Apply Threshold: k-NN" to_port="threshold"/>
+          <connect from_op="Apply Threshold: k-NN" from_port="example set" to_op="Testing Performance: k-NN" to_port="labelled data"/>
+          <connect from_op="Testing Performance: k-NN" from_port="performance" to_op="Extract Performance: k-NN" to_port="in 1"/>
+          <connect from_op="Extract Performance: k-NN" from_port="out 1" to_port="out 3"/>
+          <connect from_op="Extract Performance: k-NN" from_port="out 2" to_port="out 4"/>
+          <connect from_op="Store Model: k-NN" from_port="through" to_port="out 1"/>
+          <portSpacing port="source_in 1" spacing="0"/>
+          <portSpacing port="source_in 2" spacing="0"/>
+          <portSpacing port="source_in 3" spacing="0"/>
+          <portSpacing port="sink_out 1" spacing="0"/>
+          <portSpacing port="sink_out 2" spacing="0"/>
+          <portSpacing port="sink_out 3" spacing="0"/>
+          <portSpacing port="sink_out 4" spacing="0"/>
+          <portSpacing port="sink_out 5" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="subprocess" compatibility="9.6.000" expanded="true" height="145" name="with LR" width="90" x="715" y="850">
+        <process expanded="true">
+          <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="9.6.000" expanded="true" height="145" name="Optimize Parameters: LR" width="90" x="313" y="34">
+            <list key="parameters">
+              <parameter key="Logistic Regression.max_iterations" value="[1;10;10;linear]"/>
+            </list>
+            <parameter key="error_handling" value="fail on error"/>
+            <parameter key="log_performance" value="true"/>
+            <parameter key="log_all_criteria" value="true"/>
+            <parameter key="synchronize" value="false"/>
+            <parameter key="enable_parallel_execution" value="true"/>
+            <process expanded="true">
+              <operator activated="true" class="concurrency:cross_validation" compatibility="9.6.000" expanded="true" height="145" name="Cross Validation: LR" width="90" x="45" y="136">
+                <parameter key="split_on_batch_attribute" value="false"/>
+                <parameter key="leave_one_out" value="false"/>
+                <parameter key="number_of_folds" value="10"/>
+                <parameter key="sampling_type" value="stratified sampling"/>
+                <parameter key="use_local_random_seed" value="true"/>
+                <parameter key="local_random_seed" value="2020"/>
+                <parameter key="enable_parallel_execution" value="true"/>
+                <process expanded="true">
+                  <operator activated="true" class="sample" compatibility="9.6.000" expanded="true" height="82" name="Sample: LR" origin="GENERATED_TEMPLATE" width="90" x="45" y="34">
+                    <parameter key="sample" value="relative"/>
+                    <parameter key="balance_data" value="true"/>
+                    <parameter key="sample_size" value="100"/>
+                    <parameter key="sample_ratio" value="0.1"/>
+                    <parameter key="sample_probability" value="0.1"/>
+                    <list key="sample_size_per_class"/>
+                    <list key="sample_ratio_per_class">
+                      <parameter key="fraud" value="1.0"/>
+                      <parameter key="correct" value="0.01"/>
+                    </list>
+                    <list key="sample_probability_per_class">
+                      <parameter key="false" value="0.02"/>
+                      <parameter key="true" value="1.0"/>
+                    </list>
+                    <parameter key="use_local_random_seed" value="true"/>
+                    <parameter key="local_random_seed" value="2020"/>
+                  </operator>
+                  <operator activated="true" class="h2o:logistic_regression" compatibility="9.3.001" expanded="true" height="124" name="Logistic Regression" width="90" x="179" y="34">
+                    <parameter key="solver" value="AUTO"/>
+                    <parameter key="reproducible" value="true"/>
+                    <parameter key="maximum_number_of_threads" value="2"/>
+                    <parameter key="use_regularization" value="false"/>
+                    <parameter key="lambda_search" value="false"/>
+                    <parameter key="number_of_lambdas" value="0"/>
+                    <parameter key="lambda_min_ratio" value="0.0"/>
+                    <parameter key="early_stopping" value="true"/>
+                    <parameter key="stopping_rounds" value="3"/>
+                    <parameter key="stopping_tolerance" value="0.001"/>
+                    <parameter key="standardize" value="false"/>
+                    <parameter key="non-negative_coefficients" value="false"/>
+                    <parameter key="add_intercept" value="true"/>
+                    <parameter key="compute_p-values" value="true"/>
+                    <parameter key="remove_collinear_columns" value="true"/>
+                    <parameter key="missing_values_handling" value="Skip"/>
+                    <parameter key="max_iterations" value="0"/>
+                    <parameter key="max_runtime_seconds" value="0"/>
+                  </operator>
+                  <connect from_port="training set" to_op="Sample: LR" to_port="example set input"/>
+                  <connect from_op="Sample: LR" from_port="example set output" to_op="Logistic Regression" to_port="training set"/>
+                  <connect from_op="Logistic Regression" from_port="model" to_port="model"/>
+                  <portSpacing port="source_training set" spacing="0"/>
+                  <portSpacing port="sink_model" spacing="0"/>
+                  <portSpacing port="sink_through 1" spacing="0"/>
+                </process>
+                <process expanded="true">
+                  <operator activated="true" class="apply_model" compatibility="9.6.000" expanded="true" height="82" name="Score Training Data: LR" width="90" x="45" y="34">
+                    <list key="application_parameters"/>
+                    <parameter key="create_view" value="false"/>
+                  </operator>
+                  <operator activated="true" class="performance_binominal_classification" compatibility="9.6.000" expanded="true" height="82" name="Training Performance: LR" width="90" x="179" y="34">
+                    <parameter key="manually_set_positive_class" value="true"/>
+                    <parameter key="positive_class" value="fraud"/>
+                    <parameter key="main_criterion" value="recall"/>
+                    <parameter key="accuracy" value="true"/>
+                    <parameter key="classification_error" value="false"/>
+                    <parameter key="kappa" value="false"/>
+                    <parameter key="AUC (optimistic)" value="false"/>
+                    <parameter key="AUC" value="false"/>
+                    <parameter key="AUC (pessimistic)" value="false"/>
+                    <parameter key="precision" value="false"/>
+                    <parameter key="recall" value="true"/>
+                    <parameter key="lift" value="false"/>
+                    <parameter key="fallout" value="false"/>
+                    <parameter key="f_measure" value="false"/>
+                    <parameter key="false_positive" value="true"/>
+                    <parameter key="false_negative" value="false"/>
+                    <parameter key="true_positive" value="false"/>
+                    <parameter key="true_negative" value="false"/>
+                    <parameter key="sensitivity" value="false"/>
+                    <parameter key="specificity" value="false"/>
+                    <parameter key="youden" value="false"/>
+                    <parameter key="positive_predictive_value" value="false"/>
+                    <parameter key="negative_predictive_value" value="false"/>
+                    <parameter key="psep" value="false"/>
+                    <parameter key="skip_undefined_labels" value="true"/>
+                    <parameter key="use_example_weights" value="true"/>
+                  </operator>
+                  <connect from_port="model" to_op="Score Training Data: LR" to_port="model"/>
+                  <connect from_port="test set" to_op="Score Training Data: LR" to_port="unlabelled data"/>
+                  <connect from_op="Score Training Data: LR" from_port="labelled data" to_op="Training Performance: LR" to_port="labelled data"/>
+                  <connect from_op="Training Performance: LR" from_port="performance" to_port="performance 1"/>
+                  <connect from_op="Training Performance: LR" from_port="example set" to_port="test set results"/>
+                  <portSpacing port="source_model" spacing="0"/>
+                  <portSpacing port="source_test set" spacing="0"/>
+                  <portSpacing port="source_through 1" spacing="0"/>
+                  <portSpacing port="sink_test set results" spacing="0"/>
+                  <portSpacing port="sink_performance 1" spacing="0"/>
+                  <portSpacing port="sink_performance 2" spacing="0"/>
+                </process>
+              </operator>
+              <operator activated="true" class="log" compatibility="9.6.000" expanded="true" height="82" name="Log: LR" width="90" x="246" y="34">
+                <list key="log">
+                  <parameter key="max_iterations" value="operator.Logistic Regression.parameter.max_iterations"/>
+                  <parameter key="accuracy" value="operator.Cross Validation: LR.value.performance 1"/>
+                  <parameter key="recall" value="operator.Cross Validation: LR.value.performance 2"/>
+                  <parameter key="false positive" value="operator.Cross Validation: LR.value.performance 3"/>
+                </list>
+                <parameter key="sorting_type" value="none"/>
+                <parameter key="sorting_k" value="100"/>
+                <parameter key="persistent" value="false"/>
+              </operator>
+              <connect from_port="input 1" to_op="Cross Validation: LR" to_port="example set"/>
+              <connect from_op="Cross Validation: LR" from_port="model" to_port="model"/>
+              <connect from_op="Cross Validation: LR" from_port="test result set" to_port="output 1"/>
+              <connect from_op="Cross Validation: LR" from_port="performance 1" to_op="Log: LR" to_port="through 1"/>
+              <connect from_op="Log: LR" from_port="through 1" to_port="performance"/>
+              <portSpacing port="source_input 1" spacing="0"/>
+              <portSpacing port="source_input 2" spacing="0"/>
+              <portSpacing port="sink_performance" spacing="0"/>
+              <portSpacing port="sink_model" spacing="0"/>
+              <portSpacing port="sink_output 1" spacing="0"/>
+              <portSpacing port="sink_output 2" spacing="0"/>
+            </process>
+          </operator>
+          <operator activated="true" class="log_to_data" compatibility="9.6.000" expanded="true" height="103" name="Log to Data: LR" width="90" x="514" y="34">
+            <parameter key="log_name" value="Log: LR"/>
+          </operator>
+          <operator activated="true" class="apply_model" compatibility="9.6.000" expanded="true" height="82" name="Score Test Data: LR" width="90" x="447" y="187">
+            <list key="application_parameters"/>
+            <parameter key="create_view" value="false"/>
+          </operator>
+          <operator activated="true" class="find_threshold" compatibility="9.6.000" expanded="true" height="82" name="Find Threshold: LR" width="90" x="313" y="442">
+            <parameter key="define_labels" value="true"/>
+            <parameter key="first_label" value="correct"/>
+            <parameter key="second_label" value="fraud"/>
+            <parameter key="misclassification_costs_first" value="1.0"/>
+            <parameter key="misclassification_costs_second" value="10.0"/>
+            <parameter key="show_roc_plot" value="false"/>
+            <parameter key="use_example_weights" value="true"/>
+            <parameter key="roc_bias" value="optimistic"/>
+          </operator>
+          <operator activated="true" class="store" compatibility="9.6.000" expanded="true" height="68" name="Store HP Log: LR" width="90" x="715" y="238">
+            <parameter key="repository_entry" value="Exam-1-Model-Comparison-02-HP-Log-LR"/>
+          </operator>
+          <operator activated="true" class="store" compatibility="9.6.000" expanded="true" height="68" name="Store TH: LR" width="90" x="447" y="493">
+            <parameter key="repository_entry" value="Exam-1-Model-Comparison-02-Threshold-LR"/>
+          </operator>
+          <operator activated="true" class="apply_threshold" compatibility="9.6.000" expanded="true" height="82" name="Apply Threshold: LR" width="90" x="581" y="442"/>
+          <operator activated="true" class="performance_binominal_classification" compatibility="9.6.000" expanded="true" height="82" name="Testing Performance: LR" width="90" x="581" y="289">
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="fraud"/>
+            <parameter key="main_criterion" value="first"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="classification_error" value="false"/>
+            <parameter key="kappa" value="false"/>
+            <parameter key="AUC (optimistic)" value="false"/>
+            <parameter key="AUC" value="false"/>
+            <parameter key="AUC (pessimistic)" value="false"/>
+            <parameter key="precision" value="false"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="lift" value="false"/>
+            <parameter key="fallout" value="false"/>
+            <parameter key="f_measure" value="false"/>
+            <parameter key="false_positive" value="true"/>
+            <parameter key="false_negative" value="true"/>
+            <parameter key="true_positive" value="false"/>
+            <parameter key="true_negative" value="false"/>
+            <parameter key="sensitivity" value="false"/>
+            <parameter key="specificity" value="false"/>
+            <parameter key="youden" value="false"/>
+            <parameter key="positive_predictive_value" value="false"/>
+            <parameter key="negative_predictive_value" value="false"/>
+            <parameter key="psep" value="false"/>
+            <parameter key="skip_undefined_labels" value="true"/>
+            <parameter key="use_example_weights" value="true"/>
+          </operator>
+          <operator activated="true" class="subprocess" compatibility="9.6.000" expanded="true" height="103" name="Extract Performance: LR" width="90" x="715" y="340">
+            <process expanded="true">
+              <operator activated="true" class="performance_to_data" compatibility="9.6.000" expanded="true" height="82" name="Performance to Data: LR" width="90" x="45" y="34"/>
+              <operator activated="true" class="transpose" compatibility="9.6.000" expanded="true" height="82" name="Transpose Performance Data: LR" width="90" x="45" y="187"/>
+              <operator activated="true" class="rename" compatibility="9.6.000" expanded="true" height="82" name="Rename Performance Attributes: LR" width="90" x="179" y="187">
+                <parameter key="old_name" value="att_1"/>
+                <parameter key="new_name" value="accuracy"/>
+                <list key="rename_additional_attributes">
+                  <parameter key="att_2" value="recall"/>
+                  <parameter key="att_3" value="false positive"/>
+                  <parameter key="att_4" value="false negative"/>
+                </list>
+              </operator>
+              <operator activated="true" class="filter_examples" compatibility="9.6.000" expanded="true" height="103" name="Remove Non-Required Examples: LR" width="90" x="313" y="187">
+                <parameter key="parameter_expression" value=""/>
+                <parameter key="condition_class" value="custom_filters"/>
+                <parameter key="invert_filter" value="false"/>
+                <list key="filters_list">
+                  <parameter key="filters_entry_key" value="id.equals.Value"/>
+                </list>
+                <parameter key="filters_logic_and" value="true"/>
+                <parameter key="filters_check_metadata" value="true"/>
+              </operator>
+              <operator activated="true" class="select_attributes" compatibility="9.6.000" expanded="true" height="82" name="Remove ID Attribute: LR" width="90" x="45" y="340">
+                <parameter key="attribute_filter_type" value="single"/>
+                <parameter key="attribute" value="id"/>
+                <parameter key="attributes" value=""/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="attribute_value"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="time"/>
+                <parameter key="block_type" value="attribute_block"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="value_matrix_row_start"/>
+                <parameter key="invert_selection" value="true"/>
+                <parameter key="include_special_attributes" value="true"/>
+              </operator>
+              <operator activated="true" class="parse_numbers" compatibility="9.6.000" expanded="true" height="82" name="Parse Numeric Attributes: LR" width="90" x="179" y="340">
+                <parameter key="attribute_filter_type" value="all"/>
+                <parameter key="attribute" value=""/>
+                <parameter key="attributes" value=""/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="nominal"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="file_path"/>
+                <parameter key="block_type" value="single_value"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="single_value"/>
+                <parameter key="invert_selection" value="false"/>
+                <parameter key="include_special_attributes" value="false"/>
+                <parameter key="decimal_character" value="."/>
+                <parameter key="grouped_digits" value="false"/>
+                <parameter key="grouping_character" value=","/>
+                <parameter key="infinity_representation" value=""/>
+                <parameter key="unparsable_value_handling" value="fail"/>
+              </operator>
+              <operator activated="true" class="generate_attributes" compatibility="9.6.000" expanded="true" height="82" name="Add Model Attribute: LR" width="90" x="313" y="340">
+                <list key="function_descriptions">
+                  <parameter key="model" value="&quot;Logistic Regression&quot;"/>
+                </list>
+                <parameter key="keep_all" value="true"/>
+              </operator>
+              <connect from_port="in 1" to_op="Performance to Data: LR" to_port="performance vector"/>
+              <connect from_op="Performance to Data: LR" from_port="example set" to_op="Transpose Performance Data: LR" to_port="example set input"/>
+              <connect from_op="Performance to Data: LR" from_port="performance vector" to_port="out 1"/>
+              <connect from_op="Transpose Performance Data: LR" from_port="example set output" to_op="Rename Performance Attributes: LR" to_port="example set input"/>
+              <connect from_op="Rename Performance Attributes: LR" from_port="example set output" to_op="Remove Non-Required Examples: LR" to_port="example set input"/>
+              <connect from_op="Remove Non-Required Examples: LR" from_port="example set output" to_op="Remove ID Attribute: LR" to_port="example set input"/>
+              <connect from_op="Remove ID Attribute: LR" from_port="example set output" to_op="Parse Numeric Attributes: LR" to_port="example set input"/>
+              <connect from_op="Parse Numeric Attributes: LR" from_port="example set output" to_op="Add Model Attribute: LR" to_port="example set input"/>
+              <connect from_op="Add Model Attribute: LR" from_port="example set output" to_port="out 2"/>
+              <portSpacing port="source_in 1" spacing="0"/>
+              <portSpacing port="source_in 2" spacing="0"/>
+              <portSpacing port="sink_out 1" spacing="0"/>
+              <portSpacing port="sink_out 2" spacing="0"/>
+              <portSpacing port="sink_out 3" spacing="0"/>
+            </process>
+          </operator>
+          <operator activated="true" class="store" compatibility="9.6.000" expanded="true" height="68" name="Store Model: LR" width="90" x="715" y="136">
+            <parameter key="repository_entry" value="Exam-1-Model-Comparison-02-Model-LR"/>
+          </operator>
+          <connect from_port="in 1" to_op="Optimize Parameters: LR" to_port="input 1"/>
+          <connect from_port="in 2" to_op="Score Test Data: LR" to_port="unlabelled data"/>
+          <connect from_op="Optimize Parameters: LR" from_port="performance" to_op="Log to Data: LR" to_port="through 1"/>
+          <connect from_op="Optimize Parameters: LR" from_port="model" to_op="Score Test Data: LR" to_port="model"/>
+          <connect from_op="Optimize Parameters: LR" from_port="output 1" to_op="Find Threshold: LR" to_port="example set"/>
+          <connect from_op="Log to Data: LR" from_port="exampleSet" to_op="Store HP Log: LR" to_port="input"/>
+          <connect from_op="Log to Data: LR" from_port="through 1" to_port="out 2"/>
+          <connect from_op="Score Test Data: LR" from_port="labelled data" to_op="Apply Threshold: LR" to_port="example set"/>
+          <connect from_op="Score Test Data: LR" from_port="model" to_op="Store Model: LR" to_port="input"/>
+          <connect from_op="Find Threshold: LR" from_port="threshold" to_op="Store TH: LR" to_port="input"/>
+          <connect from_op="Store TH: LR" from_port="through" to_op="Apply Threshold: LR" to_port="threshold"/>
+          <connect from_op="Apply Threshold: LR" from_port="example set" to_op="Testing Performance: LR" to_port="labelled data"/>
+          <connect from_op="Testing Performance: LR" from_port="performance" to_op="Extract Performance: LR" to_port="in 1"/>
+          <connect from_op="Extract Performance: LR" from_port="out 1" to_port="out 3"/>
+          <connect from_op="Extract Performance: LR" from_port="out 2" to_port="out 4"/>
+          <connect from_op="Store Model: LR" from_port="through" to_port="out 1"/>
+          <portSpacing port="source_in 1" spacing="0"/>
+          <portSpacing port="source_in 2" spacing="0"/>
+          <portSpacing port="source_in 3" spacing="0"/>
+          <portSpacing port="sink_out 1" spacing="0"/>
+          <portSpacing port="sink_out 2" spacing="0"/>
+          <portSpacing port="sink_out 3" spacing="0"/>
+          <portSpacing port="sink_out 4" spacing="0"/>
+          <portSpacing port="sink_out 5" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="subprocess" compatibility="9.6.000" expanded="true" height="145" name="with NB" width="90" x="715" y="595">
+        <process expanded="true">
+          <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="9.6.000" expanded="true" height="145" name="Optimize Parameters: NB" width="90" x="313" y="34">
+            <list key="parameters">
+              <parameter key="Naive Bayes.laplace_correction" value="true,false"/>
+            </list>
+            <parameter key="error_handling" value="fail on error"/>
+            <parameter key="log_performance" value="true"/>
+            <parameter key="log_all_criteria" value="true"/>
+            <parameter key="synchronize" value="false"/>
+            <parameter key="enable_parallel_execution" value="true"/>
+            <process expanded="true">
+              <operator activated="true" class="concurrency:cross_validation" compatibility="9.6.000" expanded="true" height="145" name="Cross Validation: NB" width="90" x="45" y="136">
+                <parameter key="split_on_batch_attribute" value="false"/>
+                <parameter key="leave_one_out" value="false"/>
+                <parameter key="number_of_folds" value="10"/>
+                <parameter key="sampling_type" value="stratified sampling"/>
+                <parameter key="use_local_random_seed" value="true"/>
+                <parameter key="local_random_seed" value="2020"/>
+                <parameter key="enable_parallel_execution" value="true"/>
+                <process expanded="true">
+                  <operator activated="true" class="sample" compatibility="9.6.000" expanded="true" height="82" name="Sample: NB" origin="GENERATED_TEMPLATE" width="90" x="45" y="34">
+                    <parameter key="sample" value="relative"/>
+                    <parameter key="balance_data" value="true"/>
+                    <parameter key="sample_size" value="100"/>
+                    <parameter key="sample_ratio" value="0.1"/>
+                    <parameter key="sample_probability" value="0.1"/>
+                    <list key="sample_size_per_class"/>
+                    <list key="sample_ratio_per_class">
+                      <parameter key="fraud" value="1.0"/>
+                      <parameter key="correct" value="0.01"/>
+                    </list>
+                    <list key="sample_probability_per_class">
+                      <parameter key="false" value="0.02"/>
+                      <parameter key="true" value="1.0"/>
+                    </list>
+                    <parameter key="use_local_random_seed" value="true"/>
+                    <parameter key="local_random_seed" value="2020"/>
+                  </operator>
+                  <operator activated="true" class="naive_bayes" compatibility="9.6.000" expanded="true" height="82" name="Naive Bayes" width="90" x="179" y="34">
+                    <parameter key="laplace_correction" value="true"/>
+                  </operator>
+                  <connect from_port="training set" to_op="Sample: NB" to_port="example set input"/>
+                  <connect from_op="Sample: NB" from_port="example set output" to_op="Naive Bayes" to_port="training set"/>
+                  <connect from_op="Naive Bayes" from_port="model" to_port="model"/>
+                  <portSpacing port="source_training set" spacing="0"/>
+                  <portSpacing port="sink_model" spacing="0"/>
+                  <portSpacing port="sink_through 1" spacing="0"/>
+                </process>
+                <process expanded="true">
+                  <operator activated="true" class="apply_model" compatibility="9.6.000" expanded="true" height="82" name="Score Training Data: NB" width="90" x="45" y="34">
+                    <list key="application_parameters"/>
+                    <parameter key="create_view" value="false"/>
+                  </operator>
+                  <operator activated="true" class="performance_binominal_classification" compatibility="9.6.000" expanded="true" height="82" name="Training Performance: NB" width="90" x="179" y="34">
+                    <parameter key="manually_set_positive_class" value="true"/>
+                    <parameter key="positive_class" value="fraud"/>
+                    <parameter key="main_criterion" value="recall"/>
+                    <parameter key="accuracy" value="true"/>
+                    <parameter key="classification_error" value="false"/>
+                    <parameter key="kappa" value="false"/>
+                    <parameter key="AUC (optimistic)" value="false"/>
+                    <parameter key="AUC" value="false"/>
+                    <parameter key="AUC (pessimistic)" value="false"/>
+                    <parameter key="precision" value="false"/>
+                    <parameter key="recall" value="true"/>
+                    <parameter key="lift" value="false"/>
+                    <parameter key="fallout" value="false"/>
+                    <parameter key="f_measure" value="false"/>
+                    <parameter key="false_positive" value="true"/>
+                    <parameter key="false_negative" value="false"/>
+                    <parameter key="true_positive" value="false"/>
+                    <parameter key="true_negative" value="false"/>
+                    <parameter key="sensitivity" value="false"/>
+                    <parameter key="specificity" value="false"/>
+                    <parameter key="youden" value="false"/>
+                    <parameter key="positive_predictive_value" value="false"/>
+                    <parameter key="negative_predictive_value" value="false"/>
+                    <parameter key="psep" value="false"/>
+                    <parameter key="skip_undefined_labels" value="true"/>
+                    <parameter key="use_example_weights" value="true"/>
+                  </operator>
+                  <connect from_port="model" to_op="Score Training Data: NB" to_port="model"/>
+                  <connect from_port="test set" to_op="Score Training Data: NB" to_port="unlabelled data"/>
+                  <connect from_op="Score Training Data: NB" from_port="labelled data" to_op="Training Performance: NB" to_port="labelled data"/>
+                  <connect from_op="Training Performance: NB" from_port="performance" to_port="performance 1"/>
+                  <connect from_op="Training Performance: NB" from_port="example set" to_port="test set results"/>
+                  <portSpacing port="source_model" spacing="0"/>
+                  <portSpacing port="source_test set" spacing="0"/>
+                  <portSpacing port="source_through 1" spacing="0"/>
+                  <portSpacing port="sink_test set results" spacing="0"/>
+                  <portSpacing port="sink_performance 1" spacing="0"/>
+                  <portSpacing port="sink_performance 2" spacing="0"/>
+                </process>
+              </operator>
+              <operator activated="true" class="log" compatibility="9.6.000" expanded="true" height="82" name="Log: NB" width="90" x="246" y="34">
+                <list key="log">
+                  <parameter key="laplace_correction" value="operator.Naive Bayes.parameter.laplace_correction"/>
+                  <parameter key="accuracy" value="operator.Cross Validation: NB.value.performance 1"/>
+                  <parameter key="recall" value="operator.Cross Validation: NB.value.performance 2"/>
+                  <parameter key="false positive" value="operator.Cross Validation: NB.value.performance 3"/>
+                </list>
+                <parameter key="sorting_type" value="none"/>
+                <parameter key="sorting_k" value="100"/>
+                <parameter key="persistent" value="false"/>
+              </operator>
+              <connect from_port="input 1" to_op="Cross Validation: NB" to_port="example set"/>
+              <connect from_op="Cross Validation: NB" from_port="model" to_port="model"/>
+              <connect from_op="Cross Validation: NB" from_port="test result set" to_port="output 1"/>
+              <connect from_op="Cross Validation: NB" from_port="performance 1" to_op="Log: NB" to_port="through 1"/>
+              <connect from_op="Log: NB" from_port="through 1" to_port="performance"/>
+              <portSpacing port="source_input 1" spacing="0"/>
+              <portSpacing port="source_input 2" spacing="0"/>
+              <portSpacing port="sink_performance" spacing="0"/>
+              <portSpacing port="sink_model" spacing="0"/>
+              <portSpacing port="sink_output 1" spacing="0"/>
+              <portSpacing port="sink_output 2" spacing="0"/>
+            </process>
+          </operator>
+          <operator activated="true" class="log_to_data" compatibility="9.6.000" expanded="true" height="103" name="Log to Data: NB" width="90" x="514" y="34">
+            <parameter key="log_name" value="Log: NB"/>
+          </operator>
+          <operator activated="true" class="apply_model" compatibility="9.6.000" expanded="true" height="82" name="Score Test Data: NB" width="90" x="447" y="187">
+            <list key="application_parameters"/>
+            <parameter key="create_view" value="false"/>
+          </operator>
+          <operator activated="true" class="find_threshold" compatibility="9.6.000" expanded="true" height="82" name="Find Threshold: NB" width="90" x="313" y="442">
+            <parameter key="define_labels" value="true"/>
+            <parameter key="first_label" value="correct"/>
+            <parameter key="second_label" value="fraud"/>
+            <parameter key="misclassification_costs_first" value="1.0"/>
+            <parameter key="misclassification_costs_second" value="10.0"/>
+            <parameter key="show_roc_plot" value="false"/>
+            <parameter key="use_example_weights" value="true"/>
+            <parameter key="roc_bias" value="optimistic"/>
+          </operator>
+          <operator activated="true" class="store" compatibility="9.6.000" expanded="true" height="68" name="Store HP Log: NB" width="90" x="715" y="238">
+            <parameter key="repository_entry" value="Exam-1-Model-Comparison-02-HP-Log-NB"/>
+          </operator>
+          <operator activated="true" class="store" compatibility="9.6.000" expanded="true" height="68" name="Store TH: NB" width="90" x="447" y="493">
+            <parameter key="repository_entry" value="Exam-1-Model-Comparison-02-Threshold-NB"/>
+          </operator>
+          <operator activated="true" class="apply_threshold" compatibility="9.6.000" expanded="true" height="82" name="Apply Threshold: NB" width="90" x="581" y="442"/>
+          <operator activated="true" class="performance_binominal_classification" compatibility="9.6.000" expanded="true" height="82" name="Testing Performance: NB" width="90" x="581" y="289">
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="fraud"/>
+            <parameter key="main_criterion" value="first"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="classification_error" value="false"/>
+            <parameter key="kappa" value="false"/>
+            <parameter key="AUC (optimistic)" value="false"/>
+            <parameter key="AUC" value="false"/>
+            <parameter key="AUC (pessimistic)" value="false"/>
+            <parameter key="precision" value="false"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="lift" value="false"/>
+            <parameter key="fallout" value="false"/>
+            <parameter key="f_measure" value="false"/>
+            <parameter key="false_positive" value="true"/>
+            <parameter key="false_negative" value="true"/>
+            <parameter key="true_positive" value="false"/>
+            <parameter key="true_negative" value="false"/>
+            <parameter key="sensitivity" value="false"/>
+            <parameter key="specificity" value="false"/>
+            <parameter key="youden" value="false"/>
+            <parameter key="positive_predictive_value" value="false"/>
+            <parameter key="negative_predictive_value" value="false"/>
+            <parameter key="psep" value="false"/>
+            <parameter key="skip_undefined_labels" value="true"/>
+            <parameter key="use_example_weights" value="true"/>
+          </operator>
+          <operator activated="true" class="subprocess" compatibility="9.6.000" expanded="true" height="103" name="Extract Performance: NB" width="90" x="715" y="340">
+            <process expanded="true">
+              <operator activated="true" class="performance_to_data" compatibility="9.6.000" expanded="true" height="82" name="Performance to Data: NB" width="90" x="45" y="34"/>
+              <operator activated="true" class="transpose" compatibility="9.6.000" expanded="true" height="82" name="Transpose Performance Data: NB" width="90" x="45" y="187"/>
+              <operator activated="true" class="rename" compatibility="9.6.000" expanded="true" height="82" name="Rename Performance Attributes: NB" width="90" x="179" y="187">
+                <parameter key="old_name" value="att_1"/>
+                <parameter key="new_name" value="accuracy"/>
+                <list key="rename_additional_attributes">
+                  <parameter key="att_2" value="recall"/>
+                  <parameter key="att_3" value="false positive"/>
+                  <parameter key="att_4" value="false negative"/>
+                </list>
+              </operator>
+              <operator activated="true" class="filter_examples" compatibility="9.6.000" expanded="true" height="103" name="Remove Non-Required Examples: NB" width="90" x="313" y="187">
+                <parameter key="parameter_expression" value=""/>
+                <parameter key="condition_class" value="custom_filters"/>
+                <parameter key="invert_filter" value="false"/>
+                <list key="filters_list">
+                  <parameter key="filters_entry_key" value="id.equals.Value"/>
+                </list>
+                <parameter key="filters_logic_and" value="true"/>
+                <parameter key="filters_check_metadata" value="true"/>
+              </operator>
+              <operator activated="true" class="select_attributes" compatibility="9.6.000" expanded="true" height="82" name="Remove ID Attribute: NB" width="90" x="45" y="340">
+                <parameter key="attribute_filter_type" value="single"/>
+                <parameter key="attribute" value="id"/>
+                <parameter key="attributes" value=""/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="attribute_value"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="time"/>
+                <parameter key="block_type" value="attribute_block"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="value_matrix_row_start"/>
+                <parameter key="invert_selection" value="true"/>
+                <parameter key="include_special_attributes" value="true"/>
+              </operator>
+              <operator activated="true" class="parse_numbers" compatibility="9.6.000" expanded="true" height="82" name="Parse Numeric Attributes: NB" width="90" x="179" y="340">
+                <parameter key="attribute_filter_type" value="all"/>
+                <parameter key="attribute" value=""/>
+                <parameter key="attributes" value=""/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="nominal"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="file_path"/>
+                <parameter key="block_type" value="single_value"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="single_value"/>
+                <parameter key="invert_selection" value="false"/>
+                <parameter key="include_special_attributes" value="false"/>
+                <parameter key="decimal_character" value="."/>
+                <parameter key="grouped_digits" value="false"/>
+                <parameter key="grouping_character" value=","/>
+                <parameter key="infinity_representation" value=""/>
+                <parameter key="unparsable_value_handling" value="fail"/>
+              </operator>
+              <operator activated="true" class="generate_attributes" compatibility="9.6.000" expanded="true" height="82" name="Add Model Attribute: NB" width="90" x="313" y="340">
+                <list key="function_descriptions">
+                  <parameter key="model" value="&quot;Naive Bayes&quot;"/>
+                </list>
+                <parameter key="keep_all" value="true"/>
+              </operator>
+              <connect from_port="in 1" to_op="Performance to Data: NB" to_port="performance vector"/>
+              <connect from_op="Performance to Data: NB" from_port="example set" to_op="Transpose Performance Data: NB" to_port="example set input"/>
+              <connect from_op="Performance to Data: NB" from_port="performance vector" to_port="out 1"/>
+              <connect from_op="Transpose Performance Data: NB" from_port="example set output" to_op="Rename Performance Attributes: NB" to_port="example set input"/>
+              <connect from_op="Rename Performance Attributes: NB" from_port="example set output" to_op="Remove Non-Required Examples: NB" to_port="example set input"/>
+              <connect from_op="Remove Non-Required Examples: NB" from_port="example set output" to_op="Remove ID Attribute: NB" to_port="example set input"/>
+              <connect from_op="Remove ID Attribute: NB" from_port="example set output" to_op="Parse Numeric Attributes: NB" to_port="example set input"/>
+              <connect from_op="Parse Numeric Attributes: NB" from_port="example set output" to_op="Add Model Attribute: NB" to_port="example set input"/>
+              <connect from_op="Add Model Attribute: NB" from_port="example set output" to_port="out 2"/>
+              <portSpacing port="source_in 1" spacing="0"/>
+              <portSpacing port="source_in 2" spacing="0"/>
+              <portSpacing port="sink_out 1" spacing="0"/>
+              <portSpacing port="sink_out 2" spacing="0"/>
+              <portSpacing port="sink_out 3" spacing="0"/>
+            </process>
+          </operator>
+          <operator activated="true" class="store" compatibility="9.6.000" expanded="true" height="68" name="Store Model: NB" width="90" x="715" y="136">
+            <parameter key="repository_entry" value="Exam-1-Model-Comparison-02-Model-NB"/>
+          </operator>
+          <connect from_port="in 1" to_op="Optimize Parameters: NB" to_port="input 1"/>
+          <connect from_port="in 2" to_op="Score Test Data: NB" to_port="unlabelled data"/>
+          <connect from_op="Optimize Parameters: NB" from_port="performance" to_op="Log to Data: NB" to_port="through 1"/>
+          <connect from_op="Optimize Parameters: NB" from_port="model" to_op="Score Test Data: NB" to_port="model"/>
+          <connect from_op="Optimize Parameters: NB" from_port="output 1" to_op="Find Threshold: NB" to_port="example set"/>
+          <connect from_op="Log to Data: NB" from_port="exampleSet" to_op="Store HP Log: NB" to_port="input"/>
+          <connect from_op="Log to Data: NB" from_port="through 1" to_port="out 2"/>
+          <connect from_op="Score Test Data: NB" from_port="labelled data" to_op="Apply Threshold: NB" to_port="example set"/>
+          <connect from_op="Score Test Data: NB" from_port="model" to_op="Store Model: NB" to_port="input"/>
+          <connect from_op="Find Threshold: NB" from_port="threshold" to_op="Store TH: NB" to_port="input"/>
+          <connect from_op="Store TH: NB" from_port="through" to_op="Apply Threshold: NB" to_port="threshold"/>
+          <connect from_op="Apply Threshold: NB" from_port="example set" to_op="Testing Performance: NB" to_port="labelled data"/>
+          <connect from_op="Testing Performance: NB" from_port="performance" to_op="Extract Performance: NB" to_port="in 1"/>
+          <connect from_op="Extract Performance: NB" from_port="out 1" to_port="out 3"/>
+          <connect from_op="Extract Performance: NB" from_port="out 2" to_port="out 4"/>
+          <connect from_op="Store Model: NB" from_port="through" to_port="out 1"/>
+          <portSpacing port="source_in 1" spacing="0"/>
+          <portSpacing port="source_in 2" spacing="0"/>
+          <portSpacing port="source_in 3" spacing="0"/>
+          <portSpacing port="sink_out 1" spacing="0"/>
+          <portSpacing port="sink_out 2" spacing="0"/>
+          <portSpacing port="sink_out 3" spacing="0"/>
+          <portSpacing port="sink_out 4" spacing="0"/>
+          <portSpacing port="sink_out 5" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="subprocess" compatibility="9.6.000" expanded="true" height="145" name="with DT" width="90" x="715" y="340">
+        <process expanded="true">
+          <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="9.6.000" expanded="true" height="145" name="Optimize Parameters: DT" width="90" x="313" y="34">
+            <list key="parameters">
+              <parameter key="Decision Tree.maximal_depth" value="[51;60;10;linear]"/>
+              <parameter key="Decision Tree.criterion" value="gain_ratio,information_gain,gini_index"/>
+            </list>
+            <parameter key="error_handling" value="fail on error"/>
+            <parameter key="log_performance" value="true"/>
+            <parameter key="log_all_criteria" value="true"/>
+            <parameter key="synchronize" value="false"/>
+            <parameter key="enable_parallel_execution" value="true"/>
+            <process expanded="true">
+              <operator activated="true" class="concurrency:cross_validation" compatibility="9.6.000" expanded="true" height="145" name="Cross Validation: DT" width="90" x="45" y="136">
+                <parameter key="split_on_batch_attribute" value="false"/>
+                <parameter key="leave_one_out" value="false"/>
+                <parameter key="number_of_folds" value="10"/>
+                <parameter key="sampling_type" value="stratified sampling"/>
+                <parameter key="use_local_random_seed" value="true"/>
+                <parameter key="local_random_seed" value="2020"/>
+                <parameter key="enable_parallel_execution" value="true"/>
+                <process expanded="true">
+                  <operator activated="true" class="sample" compatibility="9.6.000" expanded="true" height="82" name="Sample: DT" origin="GENERATED_TEMPLATE" width="90" x="45" y="34">
+                    <parameter key="sample" value="relative"/>
+                    <parameter key="balance_data" value="true"/>
+                    <parameter key="sample_size" value="100"/>
+                    <parameter key="sample_ratio" value="0.1"/>
+                    <parameter key="sample_probability" value="0.1"/>
+                    <list key="sample_size_per_class"/>
+                    <list key="sample_ratio_per_class">
+                      <parameter key="fraud" value="1.0"/>
+                      <parameter key="correct" value="0.01"/>
+                    </list>
+                    <list key="sample_probability_per_class">
+                      <parameter key="false" value="0.02"/>
+                      <parameter key="true" value="1.0"/>
+                    </list>
+                    <parameter key="use_local_random_seed" value="true"/>
+                    <parameter key="local_random_seed" value="2020"/>
+                  </operator>
+                  <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="9.6.000" expanded="true" height="103" name="Decision Tree" width="90" x="179" y="34">
+                    <parameter key="criterion" value="gain_ratio"/>
+                    <parameter key="maximal_depth" value="20"/>
+                    <parameter key="apply_pruning" value="true"/>
+                    <parameter key="confidence" value="0.1"/>
+                    <parameter key="apply_prepruning" value="true"/>
+                    <parameter key="minimal_gain" value="0.01"/>
+                    <parameter key="minimal_leaf_size" value="2"/>
+                    <parameter key="minimal_size_for_split" value="4"/>
+                    <parameter key="number_of_prepruning_alternatives" value="3"/>
+                  </operator>
+                  <connect from_port="training set" to_op="Sample: DT" to_port="example set input"/>
+                  <connect from_op="Sample: DT" from_port="example set output" to_op="Decision Tree" to_port="training set"/>
+                  <connect from_op="Decision Tree" from_port="model" to_port="model"/>
+                  <portSpacing port="source_training set" spacing="0"/>
+                  <portSpacing port="sink_model" spacing="0"/>
+                  <portSpacing port="sink_through 1" spacing="0"/>
+                </process>
+                <process expanded="true">
+                  <operator activated="true" class="apply_model" compatibility="9.6.000" expanded="true" height="82" name="Score Training Data: DT" width="90" x="45" y="34">
+                    <list key="application_parameters"/>
+                    <parameter key="create_view" value="false"/>
+                  </operator>
+                  <operator activated="true" class="performance_binominal_classification" compatibility="9.6.000" expanded="true" height="82" name="Training Performance: DT" width="90" x="179" y="34">
+                    <parameter key="manually_set_positive_class" value="true"/>
+                    <parameter key="positive_class" value="fraud"/>
+                    <parameter key="main_criterion" value="recall"/>
+                    <parameter key="accuracy" value="true"/>
+                    <parameter key="classification_error" value="false"/>
+                    <parameter key="kappa" value="false"/>
+                    <parameter key="AUC (optimistic)" value="false"/>
+                    <parameter key="AUC" value="false"/>
+                    <parameter key="AUC (pessimistic)" value="false"/>
+                    <parameter key="precision" value="false"/>
+                    <parameter key="recall" value="true"/>
+                    <parameter key="lift" value="false"/>
+                    <parameter key="fallout" value="false"/>
+                    <parameter key="f_measure" value="false"/>
+                    <parameter key="false_positive" value="true"/>
+                    <parameter key="false_negative" value="false"/>
+                    <parameter key="true_positive" value="false"/>
+                    <parameter key="true_negative" value="false"/>
+                    <parameter key="sensitivity" value="false"/>
+                    <parameter key="specificity" value="false"/>
+                    <parameter key="youden" value="false"/>
+                    <parameter key="positive_predictive_value" value="false"/>
+                    <parameter key="negative_predictive_value" value="false"/>
+                    <parameter key="psep" value="false"/>
+                    <parameter key="skip_undefined_labels" value="true"/>
+                    <parameter key="use_example_weights" value="true"/>
+                  </operator>
+                  <connect from_port="model" to_op="Score Training Data: DT" to_port="model"/>
+                  <connect from_port="test set" to_op="Score Training Data: DT" to_port="unlabelled data"/>
+                  <connect from_op="Score Training Data: DT" from_port="labelled data" to_op="Training Performance: DT" to_port="labelled data"/>
+                  <connect from_op="Training Performance: DT" from_port="performance" to_port="performance 1"/>
+                  <connect from_op="Training Performance: DT" from_port="example set" to_port="test set results"/>
+                  <portSpacing port="source_model" spacing="0"/>
+                  <portSpacing port="source_test set" spacing="0"/>
+                  <portSpacing port="source_through 1" spacing="0"/>
+                  <portSpacing port="sink_test set results" spacing="0"/>
+                  <portSpacing port="sink_performance 1" spacing="0"/>
+                  <portSpacing port="sink_performance 2" spacing="0"/>
+                </process>
+              </operator>
+              <operator activated="true" class="log" compatibility="9.6.000" expanded="true" height="82" name="Log: DT" width="90" x="246" y="34">
+                <list key="log">
+                  <parameter key="criterion" value="operator.Decision Tree.parameter.criterion"/>
+                  <parameter key="maximal_depth" value="operator.Decision Tree.parameter.maximal_depth"/>
+                  <parameter key="accuracy" value="operator.Cross Validation: DT.value.performance 1"/>
+                  <parameter key="recall" value="operator.Cross Validation: DT.value.performance 2"/>
+                  <parameter key="false positive" value="operator.Cross Validation: DT.value.performance 3"/>
+                </list>
+                <parameter key="sorting_type" value="none"/>
+                <parameter key="sorting_k" value="100"/>
+                <parameter key="persistent" value="false"/>
+              </operator>
+              <connect from_port="input 1" to_op="Cross Validation: DT" to_port="example set"/>
+              <connect from_op="Cross Validation: DT" from_port="model" to_port="model"/>
+              <connect from_op="Cross Validation: DT" from_port="test result set" to_port="output 1"/>
+              <connect from_op="Cross Validation: DT" from_port="performance 1" to_op="Log: DT" to_port="through 1"/>
+              <connect from_op="Log: DT" from_port="through 1" to_port="performance"/>
+              <portSpacing port="source_input 1" spacing="0"/>
+              <portSpacing port="source_input 2" spacing="0"/>
+              <portSpacing port="sink_performance" spacing="0"/>
+              <portSpacing port="sink_model" spacing="0"/>
+              <portSpacing port="sink_output 1" spacing="0"/>
+              <portSpacing port="sink_output 2" spacing="0"/>
+            </process>
+          </operator>
+          <operator activated="true" class="apply_model" compatibility="9.6.000" expanded="true" height="82" name="Score Test Data: DT" width="90" x="447" y="187">
+            <list key="application_parameters"/>
+            <parameter key="create_view" value="false"/>
+          </operator>
+          <operator activated="true" class="find_threshold" compatibility="9.6.000" expanded="true" height="82" name="Find Threshold: DT" width="90" x="313" y="442">
+            <parameter key="define_labels" value="true"/>
+            <parameter key="first_label" value="correct"/>
+            <parameter key="second_label" value="fraud"/>
+            <parameter key="misclassification_costs_first" value="1.0"/>
+            <parameter key="misclassification_costs_second" value="10.0"/>
+            <parameter key="show_roc_plot" value="false"/>
+            <parameter key="use_example_weights" value="true"/>
+            <parameter key="roc_bias" value="optimistic"/>
+          </operator>
+          <operator activated="true" class="log_to_data" compatibility="9.6.000" expanded="true" height="103" name="Log to Data: DT" width="90" x="514" y="34">
+            <parameter key="log_name" value="Log: DT"/>
+          </operator>
+          <operator activated="true" class="store" compatibility="9.6.000" expanded="true" height="68" name="Store HP Log: DT" width="90" x="715" y="238">
+            <parameter key="repository_entry" value="Exam-1-Model-Comparison-02-HP-Log-DT"/>
+          </operator>
+          <operator activated="true" class="store" compatibility="9.6.000" expanded="true" height="68" name="Store TH: DT" width="90" x="447" y="493">
+            <parameter key="repository_entry" value="Exam-1-Model-Comparison-02-Threshold-DT"/>
+          </operator>
+          <operator activated="true" class="apply_threshold" compatibility="9.6.000" expanded="true" height="82" name="Apply Threshold: DT" width="90" x="581" y="442"/>
+          <operator activated="true" class="performance_binominal_classification" compatibility="9.6.000" expanded="true" height="82" name="Testing Performance: DT" width="90" x="581" y="289">
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="fraud"/>
+            <parameter key="main_criterion" value="first"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="classification_error" value="false"/>
+            <parameter key="kappa" value="false"/>
+            <parameter key="AUC (optimistic)" value="false"/>
+            <parameter key="AUC" value="false"/>
+            <parameter key="AUC (pessimistic)" value="false"/>
+            <parameter key="precision" value="false"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="lift" value="false"/>
+            <parameter key="fallout" value="false"/>
+            <parameter key="f_measure" value="false"/>
+            <parameter key="false_positive" value="true"/>
+            <parameter key="false_negative" value="true"/>
+            <parameter key="true_positive" value="false"/>
+            <parameter key="true_negative" value="false"/>
+            <parameter key="sensitivity" value="false"/>
+            <parameter key="specificity" value="false"/>
+            <parameter key="youden" value="false"/>
+            <parameter key="positive_predictive_value" value="false"/>
+            <parameter key="negative_predictive_value" value="false"/>
+            <parameter key="psep" value="false"/>
+            <parameter key="skip_undefined_labels" value="true"/>
+            <parameter key="use_example_weights" value="true"/>
+          </operator>
+          <operator activated="true" class="subprocess" compatibility="9.6.000" expanded="true" height="103" name="Extract Performance: DT" width="90" x="715" y="340">
+            <process expanded="true">
+              <operator activated="true" class="performance_to_data" compatibility="9.6.000" expanded="true" height="82" name="Performance to Data: DT" width="90" x="45" y="34"/>
+              <operator activated="true" class="transpose" compatibility="9.6.000" expanded="true" height="82" name="Transpose Performance Data: DT" width="90" x="45" y="187"/>
+              <operator activated="true" class="rename" compatibility="9.6.000" expanded="true" height="82" name="Rename Performance Attributes: DT" width="90" x="179" y="187">
+                <parameter key="old_name" value="att_1"/>
+                <parameter key="new_name" value="accuracy"/>
+                <list key="rename_additional_attributes">
+                  <parameter key="att_2" value="recall"/>
+                  <parameter key="att_3" value="false positive"/>
+                  <parameter key="att_4" value="false negative"/>
+                </list>
+              </operator>
+              <operator activated="true" class="filter_examples" compatibility="9.6.000" expanded="true" height="103" name="Remove Non-Required Examples: DT" width="90" x="313" y="187">
+                <parameter key="parameter_expression" value=""/>
+                <parameter key="condition_class" value="custom_filters"/>
+                <parameter key="invert_filter" value="false"/>
+                <list key="filters_list">
+                  <parameter key="filters_entry_key" value="id.equals.Value"/>
+                </list>
+                <parameter key="filters_logic_and" value="true"/>
+                <parameter key="filters_check_metadata" value="true"/>
+              </operator>
+              <operator activated="true" class="select_attributes" compatibility="9.6.000" expanded="true" height="82" name="Remove ID Attribute: DT" width="90" x="45" y="340">
+                <parameter key="attribute_filter_type" value="single"/>
+                <parameter key="attribute" value="id"/>
+                <parameter key="attributes" value=""/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="attribute_value"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="time"/>
+                <parameter key="block_type" value="attribute_block"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="value_matrix_row_start"/>
+                <parameter key="invert_selection" value="true"/>
+                <parameter key="include_special_attributes" value="true"/>
+              </operator>
+              <operator activated="true" class="parse_numbers" compatibility="9.6.000" expanded="true" height="82" name="Parse Numeric Attributes: DT" width="90" x="179" y="340">
+                <parameter key="attribute_filter_type" value="all"/>
+                <parameter key="attribute" value=""/>
+                <parameter key="attributes" value=""/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="nominal"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="file_path"/>
+                <parameter key="block_type" value="single_value"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="single_value"/>
+                <parameter key="invert_selection" value="false"/>
+                <parameter key="include_special_attributes" value="false"/>
+                <parameter key="decimal_character" value="."/>
+                <parameter key="grouped_digits" value="false"/>
+                <parameter key="grouping_character" value=","/>
+                <parameter key="infinity_representation" value=""/>
+                <parameter key="unparsable_value_handling" value="fail"/>
+              </operator>
+              <operator activated="true" class="generate_attributes" compatibility="9.6.000" expanded="true" height="82" name="Add Model Attribute: DT" width="90" x="313" y="340">
+                <list key="function_descriptions">
+                  <parameter key="model" value="&quot;Decision Tree&quot;"/>
+                </list>
+                <parameter key="keep_all" value="true"/>
+              </operator>
+              <connect from_port="in 1" to_op="Performance to Data: DT" to_port="performance vector"/>
+              <connect from_op="Performance to Data: DT" from_port="example set" to_op="Transpose Performance Data: DT" to_port="example set input"/>
+              <connect from_op="Performance to Data: DT" from_port="performance vector" to_port="out 1"/>
+              <connect from_op="Transpose Performance Data: DT" from_port="example set output" to_op="Rename Performance Attributes: DT" to_port="example set input"/>
+              <connect from_op="Rename Performance Attributes: DT" from_port="example set output" to_op="Remove Non-Required Examples: DT" to_port="example set input"/>
+              <connect from_op="Remove Non-Required Examples: DT" from_port="example set output" to_op="Remove ID Attribute: DT" to_port="example set input"/>
+              <connect from_op="Remove ID Attribute: DT" from_port="example set output" to_op="Parse Numeric Attributes: DT" to_port="example set input"/>
+              <connect from_op="Parse Numeric Attributes: DT" from_port="example set output" to_op="Add Model Attribute: DT" to_port="example set input"/>
+              <connect from_op="Add Model Attribute: DT" from_port="example set output" to_port="out 2"/>
+              <portSpacing port="source_in 1" spacing="0"/>
+              <portSpacing port="source_in 2" spacing="0"/>
+              <portSpacing port="sink_out 1" spacing="0"/>
+              <portSpacing port="sink_out 2" spacing="0"/>
+              <portSpacing port="sink_out 3" spacing="0"/>
+            </process>
+          </operator>
+          <operator activated="true" class="store" compatibility="9.6.000" expanded="true" height="68" name="Store Model: DT" width="90" x="715" y="136">
+            <parameter key="repository_entry" value="Exam-1-Model-Comparison-02-Model-DT"/>
+          </operator>
+          <connect from_port="in 1" to_op="Optimize Parameters: DT" to_port="input 1"/>
+          <connect from_port="in 2" to_op="Score Test Data: DT" to_port="unlabelled data"/>
+          <connect from_op="Optimize Parameters: DT" from_port="performance" to_op="Log to Data: DT" to_port="through 1"/>
+          <connect from_op="Optimize Parameters: DT" from_port="model" to_op="Score Test Data: DT" to_port="model"/>
+          <connect from_op="Optimize Parameters: DT" from_port="output 1" to_op="Find Threshold: DT" to_port="example set"/>
+          <connect from_op="Score Test Data: DT" from_port="labelled data" to_op="Apply Threshold: DT" to_port="example set"/>
+          <connect from_op="Score Test Data: DT" from_port="model" to_op="Store Model: DT" to_port="input"/>
+          <connect from_op="Find Threshold: DT" from_port="threshold" to_op="Store TH: DT" to_port="input"/>
+          <connect from_op="Log to Data: DT" from_port="exampleSet" to_op="Store HP Log: DT" to_port="input"/>
+          <connect from_op="Log to Data: DT" from_port="through 1" to_port="out 2"/>
+          <connect from_op="Store TH: DT" from_port="through" to_op="Apply Threshold: DT" to_port="threshold"/>
+          <connect from_op="Apply Threshold: DT" from_port="example set" to_op="Testing Performance: DT" to_port="labelled data"/>
+          <connect from_op="Testing Performance: DT" from_port="performance" to_op="Extract Performance: DT" to_port="in 1"/>
+          <connect from_op="Extract Performance: DT" from_port="out 1" to_port="out 3"/>
+          <connect from_op="Extract Performance: DT" from_port="out 2" to_port="out 4"/>
+          <connect from_op="Store Model: DT" from_port="through" to_port="out 1"/>
+          <portSpacing port="source_in 1" spacing="0"/>
+          <portSpacing port="source_in 2" spacing="0"/>
+          <portSpacing port="source_in 3" spacing="0"/>
+          <portSpacing port="sink_out 1" spacing="0"/>
+          <portSpacing port="sink_out 2" spacing="0"/>
+          <portSpacing port="sink_out 3" spacing="0"/>
+          <portSpacing port="sink_out 4" spacing="0"/>
+          <portSpacing port="sink_out 5" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="subprocess" compatibility="9.6.000" expanded="true" height="187" name="Aggregate Performance" width="90" x="1117" y="493">
+        <process expanded="true">
+          <operator activated="true" class="append" compatibility="9.6.000" expanded="true" height="187" name="Append" origin="GENERATED_TEMPLATE" width="90" x="45" y="34">
+            <parameter key="datamanagement" value="double_array"/>
+            <parameter key="data_management" value="auto"/>
+            <parameter key="merge_type" value="all"/>
+          </operator>
+          <operator activated="true" class="order_attributes" compatibility="9.6.000" expanded="true" height="82" name="Aggregated Performance" origin="GENERATED_TEMPLATE" width="90" x="179" y="34">
+            <parameter key="sort_mode" value="user specified"/>
+            <parameter key="attribute_ordering" value="model|accuracy|recall|false positive|false negative"/>
+            <parameter key="use_regular_expressions" value="false"/>
+            <parameter key="handle_unmatched" value="remove"/>
+            <parameter key="sort_direction" value="ascending"/>
+          </operator>
+          <connect from_port="in 1" to_op="Append" to_port="example set 1"/>
+          <connect from_port="in 2" to_op="Append" to_port="example set 2"/>
+          <connect from_port="in 3" to_op="Append" to_port="example set 3"/>
+          <connect from_port="in 4" to_op="Append" to_port="example set 4"/>
+          <connect from_port="in 5" to_op="Append" to_port="example set 5"/>
+          <connect from_port="in 6" to_op="Append" to_port="example set 6"/>
+          <connect from_op="Append" from_port="merged set" to_op="Aggregated Performance" to_port="example set input"/>
+          <connect from_op="Aggregated Performance" from_port="example set output" to_port="out 1"/>
+          <portSpacing port="source_in 1" spacing="0"/>
+          <portSpacing port="source_in 2" spacing="0"/>
+          <portSpacing port="source_in 3" spacing="0"/>
+          <portSpacing port="source_in 4" spacing="0"/>
+          <portSpacing port="source_in 5" spacing="0"/>
+          <portSpacing port="source_in 6" spacing="0"/>
+          <portSpacing port="source_in 7" spacing="0"/>
+          <portSpacing port="sink_out 1" spacing="0"/>
+          <portSpacing port="sink_out 2" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="store" compatibility="9.6.000" expanded="true" height="68" name="Store Aggregated Performance" width="90" x="1117" y="748">
+        <parameter key="repository_entry" value="Exam-1-Model-Comparison-02-Performance"/>
+      </operator>
+      <connect from_op="Execute Exam-1-Import" from_port="result 1" to_op="Execute Exam-1-Data-Pre-Processing-Final: Training" to_port="input 1"/>
+      <connect from_op="Execute Exam-1-Import" from_port="result 2" to_op="Execute Exam-1-Data-Pre-Processing-Final: Testing" to_port="input 1"/>
+      <connect from_op="Execute Exam-1-Data-Pre-Processing-Final: Training" from_port="result 1" to_op="Multiply: Training" to_port="input"/>
+      <connect from_op="Multiply: Training" from_port="output 1" to_op="with DT" to_port="in 1"/>
+      <connect from_op="Multiply: Training" from_port="output 2" to_op="with NB" to_port="in 1"/>
+      <connect from_op="Multiply: Training" from_port="output 3" to_op="with LR" to_port="in 1"/>
+      <connect from_op="Multiply: Training" from_port="output 4" to_op="with k-NN" to_port="in 1"/>
+      <connect from_op="Multiply: Training" from_port="output 5" to_op="with Ensembler" to_port="in 1"/>
+      <connect from_op="Multiply: Training" from_port="output 6" to_op="with SVM" to_port="in 1"/>
+      <connect from_op="Execute Exam-1-Data-Pre-Processing-Final: Testing" from_port="result 1" to_op="Multiply: Testing" to_port="input"/>
+      <connect from_op="Multiply: Testing" from_port="output 1" to_op="with DT" to_port="in 2"/>
+      <connect from_op="Multiply: Testing" from_port="output 2" to_op="with NB" to_port="in 2"/>
+      <connect from_op="Multiply: Testing" from_port="output 3" to_op="with LR" to_port="in 2"/>
+      <connect from_op="Multiply: Testing" from_port="output 4" to_op="with k-NN" to_port="in 2"/>
+      <connect from_op="Multiply: Testing" from_port="output 5" to_op="with Ensembler" to_port="in 2"/>
+      <connect from_op="Multiply: Testing" from_port="output 6" to_op="with SVM" to_port="in 2"/>
+      <connect from_op="with SVM" from_port="out 1" to_port="result 16"/>
+      <connect from_op="with SVM" from_port="out 2" to_port="result 17"/>
+      <connect from_op="with SVM" from_port="out 3" to_port="result 18"/>
+      <connect from_op="with SVM" from_port="out 4" to_op="Aggregate Performance" to_port="in 6"/>
+      <connect from_op="with Ensembler" from_port="out 1" to_port="result 13"/>
+      <connect from_op="with Ensembler" from_port="out 2" to_port="result 14"/>
+      <connect from_op="with Ensembler" from_port="out 3" to_port="result 15"/>
+      <connect from_op="with Ensembler" from_port="out 4" to_op="Aggregate Performance" to_port="in 5"/>
+      <connect from_op="with k-NN" from_port="out 1" to_port="result 10"/>
+      <connect from_op="with k-NN" from_port="out 2" to_port="result 11"/>
+      <connect from_op="with k-NN" from_port="out 3" to_port="result 12"/>
+      <connect from_op="with k-NN" from_port="out 4" to_op="Aggregate Performance" to_port="in 4"/>
+      <connect from_op="with LR" from_port="out 1" to_port="result 7"/>
+      <connect from_op="with LR" from_port="out 2" to_port="result 8"/>
+      <connect from_op="with LR" from_port="out 3" to_port="result 9"/>
+      <connect from_op="with LR" from_port="out 4" to_op="Aggregate Performance" to_port="in 3"/>
+      <connect from_op="with NB" from_port="out 1" to_port="result 4"/>
+      <connect from_op="with NB" from_port="out 2" to_port="result 5"/>
+      <connect from_op="with NB" from_port="out 3" to_port="result 6"/>
+      <connect from_op="with NB" from_port="out 4" to_op="Aggregate Performance" to_port="in 2"/>
+      <connect from_op="with DT" from_port="out 1" to_port="result 1"/>
+      <connect from_op="with DT" from_port="out 2" to_port="result 2"/>
+      <connect from_op="with DT" from_port="out 3" to_port="result 3"/>
+      <connect from_op="with DT" from_port="out 4" to_op="Aggregate Performance" to_port="in 1"/>
+      <connect from_op="Aggregate Performance" from_port="out 1" to_op="Store Aggregated Performance" to_port="input"/>
+      <connect from_op="Store Aggregated Performance" from_port="through" to_port="result 19"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+      <portSpacing port="sink_result 4" spacing="0"/>
+      <portSpacing port="sink_result 5" spacing="0"/>
+      <portSpacing port="sink_result 6" spacing="0"/>
+      <portSpacing port="sink_result 7" spacing="0"/>
+      <portSpacing port="sink_result 8" spacing="0"/>
+      <portSpacing port="sink_result 9" spacing="0"/>
+      <portSpacing port="sink_result 10" spacing="0"/>
+      <portSpacing port="sink_result 11" spacing="0"/>
+      <portSpacing port="sink_result 12" spacing="0"/>
+      <portSpacing port="sink_result 13" spacing="0"/>
+      <portSpacing port="sink_result 14" spacing="0"/>
+      <portSpacing port="sink_result 15" spacing="0"/>
+      <portSpacing port="sink_result 16" spacing="0"/>
+      <portSpacing port="sink_result 17" spacing="0"/>
+      <portSpacing port="sink_result 18" spacing="0"/>
+      <portSpacing port="sink_result 19" spacing="0"/>
+      <portSpacing port="sink_result 20" spacing="0"/>
+      <description align="left" color="purple" colored="true" height="1640" resized="true" width="190" x="188" y="204">Step: 2&lt;br&gt;Data Pre-Processing&lt;br&gt;&lt;br&gt;- Set Role&lt;br&gt;- Numerical to Binomial&lt;br&gt;- Map&lt;br/&gt;- Normalize&lt;br/&gt;- PCA</description>
+      <description align="left" color="blue" colored="true" height="1640" resized="true" width="162" x="25" y="204">Step: 1&lt;br&gt;Import Data</description>
+      <description align="left" color="green" colored="true" height="1640" resized="true" width="241" x="380" y="204">Step: 3&lt;br&gt;Multiply&lt;br&gt;&lt;br&gt;- Multiply data for different models</description>
+      <description align="left" color="red" colored="true" height="1640" resized="true" width="440" x="622" y="204">Step: 4&lt;br&gt;Apply Different Models</description>
+      <description align="left" color="gray" colored="true" height="236" resized="true" width="178" x="662" y="540">- Apply Naive Bayes&lt;br&gt;</description>
+      <description align="left" color="gray" colored="true" height="241" resized="true" width="178" x="662" y="277">- Apply Decision Tree&lt;br&gt;</description>
+      <description align="left" color="gray" colored="true" height="231" resized="true" width="178" x="662" y="803">- Apply Logistic Regression&lt;br&gt;</description>
+      <description align="left" color="blue" colored="true" height="1640" resized="true" width="267" x="1063" y="204">Step: 5&lt;br&gt;Aggregate Performance</description>
+      <description align="left" color="yellow" colored="true" height="170" resized="true" width="1305" x="25" y="32">APPLY MULTIPLE MODELS WITH ADVANCED CONFIGURATIONS&lt;br&gt;Credit card fraud prediction based on anonymized transaction data.&lt;br&gt;&lt;br&gt;This process will -&lt;br&gt;[A] import the data using &amp;quot;Exam-1-Import&amp;quot; &amp;gt;&amp;gt; [B] uses &amp;quot;Exam-1-Data-Pre-Processing-Final&amp;quot; to pre-process both Training and Testing splits&lt;br&gt;[C] apply Decision Tree, Naive Bayes, Logistic Regression and k-NN models with HP optimization &amp;gt;&amp;gt; [D] apply an Ensembler model with HP-optimized Decision Tree, Naive Bayes and Logistic Regression model&lt;br&gt;[E] use sampling with ration fraud:correct (1.0 : 0.01) to mitigate the imbalancy of fraud cases before training the models &amp;gt;&amp;gt; [F] use 10x misclassification cost for fraud case to find thresholds to mitigate imbalancy of costs&lt;br&gt;[G] use another advanced model SVM with hyperparameter optimization &amp;gt;&amp;gt; [H] aggregate test performance measures for all applied models&lt;br&gt;</description>
+      <description align="left" color="yellow" colored="true" height="194" resized="true" width="1305" x="25" y="1846">Outputs:&lt;br&gt;- displays model, training performance and test performance for all 6 models&lt;br&gt;- displays hyperparameter logs and respective performance measures of optimation iterations for all 5 models except Ensembler&lt;br&gt;- displays an aggregated table view of test performance measures for 6 models&lt;br&gt;&lt;br&gt;*** Takes almost 10 minutes to complete with my following setup: HP ProBook 4540s&lt;br&gt;- Processor: 3rd Generation Intel Core i5-3210M (2.5 GHz, 3MB L3 cache, 2 cores)&lt;br&gt;- Memory: 8.00 GB DDR3 RAM (1333 MHz)&lt;br&gt;- Storage: 750GB 5400 rpm SMART SATA II&lt;br&gt;&lt;br&gt;</description>
+      <description align="left" color="gray" colored="true" height="235" resized="true" width="178" x="662" y="1056">- Apply k-Nearest Neighbor&lt;br&gt;</description>
+      <description align="left" color="gray" colored="true" height="229" resized="true" width="178" x="662" y="1317">- Apply Ensembler&lt;br&gt;</description>
+      <description align="left" color="gray" colored="true" height="236" resized="true" width="178" x="662" y="1577">- Apply SVM (Polynomial)&lt;br&gt;</description>
+    </process>
+  </operator>
+</process>

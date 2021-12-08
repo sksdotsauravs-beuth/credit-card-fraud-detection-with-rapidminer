@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="9.6.000">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="9.6.000" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2020"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="9.6.000" expanded="true" height="68" name="Retrieve Exam-1-Data" width="90" x="45" y="289">
+        <parameter key="repository_entry" value="Exam-1-Data"/>
+      </operator>
+      <operator activated="true" class="productivity:execute_process" compatibility="9.6.000" expanded="true" height="68" name="Execute Exam-1-Basic-Preparation" width="90" x="246" y="289">
+        <parameter key="process_location" value="Exam-1-Basic-Preparation"/>
+        <parameter key="use_input" value="true"/>
+        <parameter key="store_output" value="false"/>
+        <parameter key="propagate_metadata_recursively" value="true"/>
+        <parameter key="cache_process" value="true"/>
+        <list key="macros"/>
+        <parameter key="fail_for_unknown_macros" value="true"/>
+      </operator>
+      <operator activated="true" class="subprocess" compatibility="9.6.000" expanded="true" height="82" name="Measure Influence of Attributes" origin="GENERATED_TEMPLATE" width="90" x="514" y="289">
+        <process expanded="true">
+          <operator activated="true" class="weight_by_correlation" compatibility="9.6.000" expanded="true" height="82" name="Weight by Correlation" origin="GENERATED_TEMPLATE" width="90" x="45" y="34">
+            <parameter key="normalize_weights" value="false"/>
+            <parameter key="sort_weights" value="true"/>
+            <parameter key="sort_direction" value="ascending"/>
+            <parameter key="squared_correlation" value="false"/>
+          </operator>
+          <operator activated="true" class="weights_to_data" compatibility="9.6.000" expanded="true" height="68" name="Weights - Correlation" origin="GENERATED_TEMPLATE" width="90" x="179" y="34"/>
+          <operator activated="true" class="generate_attributes" compatibility="6.4.000" expanded="true" height="82" name="Generate Attributes" origin="GENERATED_TEMPLATE" width="90" x="313" y="34">
+            <list key="function_descriptions">
+              <parameter key="Method" value="&quot;Correlation&quot;"/>
+            </list>
+            <parameter key="keep_all" value="true"/>
+          </operator>
+          <operator activated="true" class="weight_by_gini_index" compatibility="9.6.000" expanded="true" height="82" name="Weight by Gini Index" origin="GENERATED_TEMPLATE" width="90" x="45" y="136">
+            <parameter key="normalize_weights" value="false"/>
+            <parameter key="sort_weights" value="true"/>
+            <parameter key="sort_direction" value="ascending"/>
+          </operator>
+          <operator activated="true" class="weight_by_information_gain" compatibility="9.6.000" expanded="true" height="82" name="Weight by Information Gain" origin="GENERATED_TEMPLATE" width="90" x="45" y="238">
+            <parameter key="normalize_weights" value="false"/>
+            <parameter key="sort_weights" value="true"/>
+            <parameter key="sort_direction" value="ascending"/>
+          </operator>
+          <operator activated="true" class="weight_by_information_gain_ratio" compatibility="9.6.000" expanded="true" height="82" name="Weight by Information Gain Ratio" origin="GENERATED_TEMPLATE" width="90" x="45" y="340">
+            <parameter key="normalize_weights" value="false"/>
+            <parameter key="sort_weights" value="true"/>
+            <parameter key="sort_direction" value="ascending"/>
+          </operator>
+          <operator activated="true" class="weights_to_data" compatibility="9.6.000" expanded="true" height="68" name="Weights - Gini Index" origin="GENERATED_TEMPLATE" width="90" x="179" y="136"/>
+          <operator activated="true" class="generate_attributes" compatibility="9.6.000" expanded="true" height="82" name="Generate Attributes (2)" origin="GENERATED_TEMPLATE" width="90" x="313" y="136">
+            <list key="function_descriptions">
+              <parameter key="Method" value="&quot;Gini&quot;"/>
+            </list>
+            <parameter key="keep_all" value="true"/>
+          </operator>
+          <operator activated="true" class="weights_to_data" compatibility="9.6.000" expanded="true" height="68" name="Weights - Information Gain" origin="GENERATED_TEMPLATE" width="90" x="179" y="238"/>
+          <operator activated="true" class="generate_attributes" compatibility="9.6.000" expanded="true" height="82" name="Generate Attributes (3)" origin="GENERATED_TEMPLATE" width="90" x="313" y="238">
+            <list key="function_descriptions">
+              <parameter key="Method" value="&quot;InfoGain&quot;"/>
+            </list>
+            <parameter key="keep_all" value="true"/>
+          </operator>
+          <operator activated="true" class="weights_to_data" compatibility="9.6.000" expanded="true" height="68" name="Weights - Informaion Gain Ratio" origin="GENERATED_TEMPLATE" width="90" x="179" y="340"/>
+          <operator activated="true" class="generate_attributes" compatibility="9.6.000" expanded="true" height="82" name="Generate Attributes (4)" origin="GENERATED_TEMPLATE" width="90" x="313" y="340">
+            <list key="function_descriptions">
+              <parameter key="Method" value="&quot;InfoGainRatio&quot;"/>
+            </list>
+            <parameter key="keep_all" value="true"/>
+          </operator>
+          <operator activated="true" class="append" compatibility="9.6.000" expanded="true" height="145" name="Append" origin="GENERATED_TEMPLATE" width="90" x="447" y="187">
+            <parameter key="datamanagement" value="double_array"/>
+            <parameter key="data_management" value="auto"/>
+            <parameter key="merge_type" value="all"/>
+          </operator>
+          <operator activated="true" class="aggregate" compatibility="9.6.000" expanded="true" height="82" name="Aggregate" origin="GENERATED_TEMPLATE" width="90" x="581" y="187">
+            <parameter key="use_default_aggregation" value="false"/>
+            <parameter key="attribute_filter_type" value="all"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value=""/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="false"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <parameter key="default_aggregation_function" value="average"/>
+            <list key="aggregation_attributes">
+              <parameter key="Weight" value="average"/>
+            </list>
+            <parameter key="group_by_attributes" value="Attribute"/>
+            <parameter key="count_all_combinations" value="false"/>
+            <parameter key="only_distinct" value="false"/>
+            <parameter key="ignore_missings" value="true"/>
+          </operator>
+          <operator activated="true" class="rename" compatibility="9.6.000" expanded="true" height="82" name="Rename" origin="GENERATED_TEMPLATE" width="90" x="715" y="187">
+            <parameter key="old_name" value="average(Weight)"/>
+            <parameter key="new_name" value="Importance"/>
+            <list key="rename_additional_attributes"/>
+          </operator>
+          <operator activated="true" class="normalize" compatibility="7.5.003" expanded="true" height="103" name="Normalize" origin="GENERATED_TEMPLATE" width="90" x="849" y="187">
+            <parameter key="return_preprocessing_model" value="false"/>
+            <parameter key="create_view" value="false"/>
+            <parameter key="attribute_filter_type" value="single"/>
+            <parameter key="attribute" value="Importance"/>
+            <parameter key="attributes" value=""/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="numeric"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="real"/>
+            <parameter key="block_type" value="value_series"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_series_end"/>
+            <parameter key="invert_selection" value="false"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <parameter key="method" value="range transformation"/>
+            <parameter key="min" value="0.0"/>
+            <parameter key="max" value="1.0"/>
+            <parameter key="allow_negative_values" value="false"/>
+          </operator>
+          <operator activated="true" class="sort" compatibility="9.6.000" expanded="true" height="82" name="Sort" origin="GENERATED_TEMPLATE" width="90" x="983" y="187">
+            <parameter key="attribute_name" value="Importance"/>
+            <parameter key="sorting_direction" value="decreasing"/>
+          </operator>
+          <operator activated="true" class="order_attributes" compatibility="9.6.000" expanded="true" height="82" name="Reorder Attributes" origin="GENERATED_TEMPLATE" width="90" x="1117" y="187">
+            <parameter key="sort_mode" value="user specified"/>
+            <parameter key="attribute_ordering" value="Attribute|Importance"/>
+            <parameter key="use_regular_expressions" value="false"/>
+            <parameter key="handle_unmatched" value="remove"/>
+            <parameter key="sort_direction" value="ascending"/>
+          </operator>
+          <connect from_port="in 1" to_op="Weight by Correlation" to_port="example set"/>
+          <connect from_op="Weight by Correlation" from_port="weights" to_op="Weights - Correlation" to_port="attribute weights"/>
+          <connect from_op="Weight by Correlation" from_port="example set" to_op="Weight by Gini Index" to_port="example set"/>
+          <connect from_op="Weights - Correlation" from_port="example set" to_op="Generate Attributes" to_port="example set input"/>
+          <connect from_op="Generate Attributes" from_port="example set output" to_op="Append" to_port="example set 1"/>
+          <connect from_op="Weight by Gini Index" from_port="weights" to_op="Weights - Gini Index" to_port="attribute weights"/>
+          <connect from_op="Weight by Gini Index" from_port="example set" to_op="Weight by Information Gain" to_port="example set"/>
+          <connect from_op="Weight by Information Gain" from_port="weights" to_op="Weights - Information Gain" to_port="attribute weights"/>
+          <connect from_op="Weight by Information Gain" from_port="example set" to_op="Weight by Information Gain Ratio" to_port="example set"/>
+          <connect from_op="Weight by Information Gain Ratio" from_port="weights" to_op="Weights - Informaion Gain Ratio" to_port="attribute weights"/>
+          <connect from_op="Weights - Gini Index" from_port="example set" to_op="Generate Attributes (2)" to_port="example set input"/>
+          <connect from_op="Generate Attributes (2)" from_port="example set output" to_op="Append" to_port="example set 2"/>
+          <connect from_op="Weights - Information Gain" from_port="example set" to_op="Generate Attributes (3)" to_port="example set input"/>
+          <connect from_op="Generate Attributes (3)" from_port="example set output" to_op="Append" to_port="example set 3"/>
+          <connect from_op="Weights - Informaion Gain Ratio" from_port="example set" to_op="Generate Attributes (4)" to_port="example set input"/>
+          <connect from_op="Generate Attributes (4)" from_port="example set output" to_op="Append" to_port="example set 4"/>
+          <connect from_op="Append" from_port="merged set" to_op="Aggregate" to_port="example set input"/>
+          <connect from_op="Aggregate" from_port="example set output" to_op="Rename" to_port="example set input"/>
+          <connect from_op="Rename" from_port="example set output" to_op="Normalize" to_port="example set input"/>
+          <connect from_op="Normalize" from_port="example set output" to_op="Sort" to_port="example set input"/>
+          <connect from_op="Sort" from_port="example set output" to_op="Reorder Attributes" to_port="example set input"/>
+          <connect from_op="Reorder Attributes" from_port="example set output" to_port="out 1"/>
+          <portSpacing port="source_in 1" spacing="0"/>
+          <portSpacing port="source_in 2" spacing="0"/>
+          <portSpacing port="sink_out 1" spacing="0"/>
+          <portSpacing port="sink_out 2" spacing="0"/>
+        </process>
+      </operator>
+      <connect from_op="Retrieve Exam-1-Data" from_port="output" to_op="Execute Exam-1-Basic-Preparation" to_port="input 1"/>
+      <connect from_op="Execute Exam-1-Basic-Preparation" from_port="result 1" to_op="Measure Influence of Attributes" to_port="in 1"/>
+      <connect from_op="Measure Influence of Attributes" from_port="out 1" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <description align="left" color="blue" colored="true" height="274" resized="true" width="178" x="18" y="120">Step: 1&lt;br&gt;Retrieve Exam-1 data from local repository.&lt;br&gt;</description>
+      <description align="left" color="orange" colored="true" height="275" resized="true" width="175" x="199" y="119">Step: 2&lt;br&gt;Basic Preparation&lt;br&gt;&lt;br&gt;- Set Role&lt;br&gt;- Numerical to Binomial&lt;br&gt;- Map</description>
+      <description align="left" color="purple" colored="true" height="275" resized="true" width="347" x="378" y="119">Step: 3&lt;br&gt;Measure Influence&lt;br&gt;&lt;br&gt;- calculate weights of attributes using different measures&lt;br&gt;- use different measures like Correlation, Gini Index etc.&lt;br&gt;- aggregate, normalize and sort attributes</description>
+      <description align="left" color="yellow" colored="true" height="87" resized="true" width="707" x="18" y="28">MEASURE ATTRIBUTE INFLUENCE&lt;br&gt;Credit card fraud prediction based on anonymized transaction data.&lt;br&gt;&lt;br&gt;This process measures the influence of all 30 attributes (Time, Amount and V1-V28) on the target Class attribute.</description>
+      <description align="left" color="yellow" colored="true" height="52" resized="true" width="707" x="18" y="398">Outputs:&lt;br&gt;- displays weight / importance [range, 0 - 1] per attribute on target attribute Class in descending order</description>
+    </process>
+  </operator>
+</process>
